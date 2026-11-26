@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkFlow CRM · Business Analysis Case Study</title>
+<meta name="description" content="LinkFlow CRM: a simulated B2B CRM business analysis project, from elicitation to UAT, with a working HTML prototype.">
+<style>
+:root{
+  --bg:#060c1a; --bg2:#0a1328; --card:#0f1a33; --card2:#13213f; --line:#1d2d52;
+  --text:#e9effd; --muted:#8fa2cb; --blue:#2f7bff; --blue2:#5b9bff; --sky:#38d4ff; --amber:#ffb84d; --red:#ff6b7a; --ok:#35e0a1;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{line-height:1.12;letter-spacing:-.02em}
+h2{font-size:clamp(30px,4vw,46px);font-weight:800;margin:10px 0 14px}
+h2 em,h1 em{font-style:normal;color:var(--blue2)}
+h3{font-size:19px;font-weight:700}
+.lead{color:var(--muted);max-width:720px;font-size:17px}
+section{padding:96px 0;position:relative}
+.sec-head{margin-bottom:44px}
+.sec-head.center{text-align:center}.sec-head.center .lead{margin:0 auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:10px;font-weight:700;font-size:15px;border:1.5px solid transparent;cursor:pointer;transition:.2s;font-family:inherit}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:0 8px 30px rgba(47,123,255,.35)}
+.btn.primary:hover{background:#4a8cff;transform:translateY(-2px)}
+.btn.ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02)}
+.btn.ghost:hover{border-color:var(--blue2);color:var(--blue2)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 11px;border-radius:99px;background:rgba(47,123,255,.15);color:var(--blue2);border:1px solid rgba(47,123,255,.35)}
+.tag.warn{background:rgba(255,184,77,.12);color:var(--amber);border-color:rgba(255,184,77,.35)}
+.tag.ok{background:rgba(53,224,161,.12);color:var(--ok);border-color:rgba(53,224,161,.35)}
+.tag.bad{background:rgba(255,107,122,.12);color:var(--red);border-color:rgba(255,107,122,.35)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* NAV */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;background:rgba(6,12,26,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(29,45,82,.7)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.brand i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--sky));display:grid;place-items:center;font-style:normal;font-size:15px;color:#fff}
+.links{display:flex;gap:26px;font-size:14px;color:var(--muted);font-weight:500}
+.links a{transition:.2s;padding:4px 0;border-bottom:2px solid transparent}
+.links a:hover,.links a.on{color:#fff;border-color:var(--blue)}
+nav .btn{padding:9px 18px;font-size:14px}
+@media(max-width:1020px){.links{display:none}}
+
+/* HERO */
+.hero{padding:150px 0 90px;min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:
+  radial-gradient(900px 600px at 82% 38%,rgba(47,123,255,.32),transparent 60%),
+  radial-gradient(500px 400px at 10% 90%,rgba(56,212,255,.10),transparent 60%),var(--bg)}
+.hero::before{content:"";position:absolute;right:-12%;top:-8%;width:62%;height:120%;background:linear-gradient(160deg,#1f64e8 0%,#2f7bff 45%,#38d4ff 120%);border-radius:48% 0 0 52% / 62% 0 0 38%;opacity:.92;transform:rotate(-6deg)}
+.hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 1.2px,transparent 1.4px);background-size:26px 26px;mask-image:linear-gradient(90deg,#000 0,transparent 55%);-webkit-mask-image:linear-gradient(90deg,#000 0,transparent 55%)}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero small{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--amber);background:rgba(255,184,77,.1);border:1px solid rgba(255,184,77,.3);padding:6px 14px;border-radius:99px;font-weight:600;margin-bottom:24px}
+.hero h1{font-size:clamp(44px,6.4vw,84px);font-weight:900}
+.hero h1 span{display:block;font-size:.42em;font-weight:700;color:var(--muted);letter-spacing:.01em;margin-top:14px}
+.hero p{color:#b6c4e4;font-size:18px;max-width:520px;margin:24px 0 34px}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-visual{position:relative}
+.frame{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.12)}
+.frame .bar{height:30px;background:#e8edf7;display:flex;align-items:center;gap:6px;padding:0 12px}
+.frame .bar i{width:9px;height:9px;border-radius:50%;background:#c3cde2}
+.frame .bar span{margin-left:10px;font-size:11px;color:#6b7a99;background:#fff;border-radius:6px;padding:2px 12px;flex:1;max-width:260px}
+.chip{position:absolute;background:rgba(10,19,40,.92);border:1px solid var(--line);border-radius:14px;padding:12px 18px;backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.5);text-align:left}
+.chip b{display:block;font-size:26px;font-weight:900;color:#fff;line-height:1}
+.chip b em{font-style:normal;color:var(--sky)}
+.chip span{font-size:12px;color:var(--muted)}
+.c1{left:-34px;top:16%}.c2{right:-22px;bottom:22%}.c3{left:8%;bottom:-26px}
+@media(max-width:960px){.hero .wrap{grid-template-columns:1fr}.hero::before{width:100%;right:-40%;top:40%;height:90%}.c1{left:0}.c2{right:0}}
+
+/* STATS */
+.stats{margin-top:-46px;position:relative;z-index:5;padding:0}
+.stats .grid{display:grid;grid-template-columns:repeat(8,1fr);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+.stat{padding:26px 10px;text-align:center;border-right:1px solid var(--line)}
+.stat:last-child{border:0}
+.stat b{display:block;font-size:34px;font-weight:900;color:#fff}
+.stat b sup{font-size:.5em;color:var(--sky)}
+.stat span{font-size:11.5px;color:var(--muted);line-height:1.3;display:block;margin-top:4px;padding:0 6px}
+@media(max-width:1000px){.stats .grid{grid-template-columns:repeat(4,1fr)}.stat{border-bottom:1px solid var(--line)}}
+@media(max-width:520px){.stats .grid{grid-template-columns:repeat(2,1fr)}}
+
+/* OVERVIEW */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.svc{padding:34px 28px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);transition:.3s;position:relative;overflow:hidden}
+.svc:hover{transform:translateY(-6px);border-color:var(--blue)}
+.svc.hot{background:linear-gradient(160deg,#2f7bff,#1d57cf);border-color:transparent}
+.svc.hot p{color:#dce8ff}
+.svc .ico{width:50px;height:50px;border-radius:14px;background:rgba(47,123,255,.18);display:grid;place-items:center;font-size:24px;margin-bottom:20px}
+.svc.hot .ico{background:rgba(255,255,255,.2)}
+.svc small{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.svc.hot small{color:#cfe0ff}
+.svc p{color:var(--muted);font-size:15px;margin-top:10px}
+.fact-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+@media(max-width:860px){.three{grid-template-columns:1fr}}
+
+/* PROCESS */
+.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative}
+.timeline::before{content:"";position:absolute;left:5%;right:5%;top:27px;height:2px;background:linear-gradient(90deg,var(--blue),var(--sky))}
+.step{position:relative;padding:0 10px;text-align:center}
+.step .n{width:56px;height:56px;border-radius:50%;background:var(--bg);border:2px solid var(--blue);display:grid;place-items:center;margin:0 auto 18px;font-weight:900;font-size:19px;position:relative;z-index:1;transition:.3s}
+.step:hover .n{background:var(--blue);box-shadow:0 0 0 8px rgba(47,123,255,.2)}
+.step h3{font-size:16px;margin-bottom:8px}
+.step p{font-size:13px;color:var(--muted);line-height:1.5}
+.step em{display:block;font-style:normal;font-size:11px;color:var(--sky);font-weight:700;margin-bottom:6px;letter-spacing:.06em}
+@media(max-width:960px){.timeline{grid-template-columns:1fr 1fr;gap:34px 12px}.timeline::before{display:none}}
+@media(max-width:520px){.timeline{grid-template-columns:1fr}}
+
+/* PROBLEM */
+.pp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:34px}
+.pp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px}
+.pp b{display:block;font-size:30px;color:var(--red);font-weight:900;line-height:1;margin-bottom:10px}
+.pp h3{font-size:15px;margin-bottom:6px}
+.pp p{font-size:13px;color:var(--muted);line-height:1.5}
+@media(max-width:1000px){.pp-grid{grid-template-columns:repeat(2,1fr)}}
+.paper{background:#fff;border-radius:16px;padding:14px;position:relative;cursor:zoom-in;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden}
+.paper img{width:100%;height:auto}
+.paper .zoom{position:absolute;right:16px;top:16px;background:var(--bg);color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;opacity:.9}
+.cap{font-size:13px;color:var(--muted);margin-top:12px}
+
+/* SOLUTION */
+.sol-grid{display:grid;grid-template-columns:1fr;gap:22px}
+.streams{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:34px}
+.row{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;padding:18px 0}
+.row+.row{border-top:1px dashed var(--line)}
+.rl{border-radius:12px;padding:14px;color:#fff;font-weight:800;font-size:14px;line-height:1.25}
+.rl small{display:block;font-weight:500;opacity:.85;font-size:12px;margin-top:2px}
+.rl.c{background:linear-gradient(135deg,#2f7bff,#1b57cc)}.rl.p{background:linear-gradient(135deg,#1fb4d6,#0f7f9f)}.rl.d{background:linear-gradient(135deg,#f0a030,#c97a10)}
+.chain{display:flex;align-items:center;flex-wrap:wrap;gap:8px 4px}
+.st{padding:10px 15px;border-radius:10px;font-size:13.5px;font-weight:600;border:1.5px solid;white-space:nowrap}
+.c .st,.chain.c .st{background:rgba(47,123,255,.1);border-color:rgba(47,123,255,.55);color:#bcd3ff}
+.chain.p .st{background:rgba(56,212,255,.09);border-color:rgba(56,212,255,.5);color:#b4efff}
+.chain.d .st{background:rgba(255,184,77,.09);border-color:rgba(255,184,77,.5);color:#ffe0ad}
+.arr{color:var(--muted);padding:0 3px}
+.gate{width:30px;height:30px;transform:rotate(45deg);background:var(--red);border-radius:5px;display:grid;place-items:center;margin:0 10px;flex:none;box-shadow:0 0 0 4px rgba(255,107,122,.2)}
+.gate b{transform:rotate(-45deg);font-size:13px;font-weight:900;color:#fff}
+.opens{margin:4px 0 0 170px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.opens::before{content:"";width:2px;height:22px;background:repeating-linear-gradient(var(--muted) 0 4px,transparent 4px 8px)}
+.gates{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+.g{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;gap:16px}
+.g .gate{margin:6px 8px 0 4px}
+.g h3{font-size:15px;margin-bottom:5px}.g p{font-size:13px;color:var(--muted);line-height:1.5}
+.why{margin-top:24px;background:rgba(255,184,77,.07);border:1px solid rgba(255,184,77,.3);border-radius:14px;padding:18px 24px;font-size:14px;color:#ffe3b3}
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:36px 0}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.rule b{font-size:12px;color:var(--sky);letter-spacing:.1em}
+.rule p{font-size:13.5px;color:var(--muted);margin-top:6px}
+@media(max-width:1000px){.gates,.rules{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.opens{margin-left:0}}
+@media(max-width:600px){.gates,.rules{grid-template-columns:1fr}}
+
+/* REQUIREMENTS */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:960px){.two{grid-template-columns:1fr}}
+.doc-stack{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:34px}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.doc b{font-size:28px;font-weight:900;display:block;color:#fff}.doc span{font-size:13px;color:var(--muted)}
+@media(max-width:860px){.doc-stack{grid-template-columns:1fr 1fr}}
+.story{font-size:15px}
+.story .as{font-size:16px;font-weight:600;line-height:1.55;margin:8px 0 18px}
+.story .as b{color:var(--sky)}
+.gwt{border-left:3px solid var(--blue);padding:4px 0 4px 16px;margin:12px 0;font-size:14px;color:#c7d4f2}
+.gwt b{color:var(--blue2);font-size:12px;letter-spacing:.08em;display:inline-block;min-width:48px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 12px;border-bottom:1px solid rgba(29,45,82,.6);color:#c9d6f4;vertical-align:top}
+.tbl tr:hover td{background:rgba(47,123,255,.05)}
+.trace{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.tn{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;text-align:center;min-width:118px;transition:.25s}
+.tn:hover{border-color:var(--blue);transform:translateY(-4px)}
+.tn b{display:block;font-size:26px;font-weight:900;color:#fff;line-height:1.1}.tn span{font-size:12px;color:var(--muted)}
+.tn em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--sky);display:block;margin-bottom:4px}
+.ta{align-self:center;color:var(--blue2);font-size:22px;padding:0 8px}
+.ex{margin-top:26px;background:var(--card2);border:1px dashed var(--line);border-radius:14px;padding:16px 22px;font-size:14px;color:#c9d6f4;text-align:center}
+.ex code{background:rgba(47,123,255,.15);color:var(--blue2);padding:2px 9px;border-radius:6px;font-weight:700;font-size:13px}
+
+/* DATA */
+.data-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+@media(max-width:960px){.data-grid{grid-template-columns:1fr}}
+.bullets{list-style:none;display:grid;gap:14px}
+.bullets li{display:flex;gap:14px;font-size:15px;color:#c7d4f2}
+.bullets li::before{content:"";flex:none;width:9px;height:9px;border-radius:3px;background:var(--blue);margin-top:9px}
+.bullets b{color:#fff}
+.sql{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+/* PROTOTYPE */
+.proto{background:linear-gradient(180deg,var(--bg),var(--bg2) 20%,var(--bg2) 80%,var(--bg))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{background:var(--card);border:1px solid var(--line);color:var(--muted);padding:9px 18px;border-radius:99px;font:600 13.5px inherit;font-family:inherit;cursor:pointer;transition:.2s}
+.tabs button:hover{color:#fff}
+.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.viewer{display:grid;grid-template-columns:1.7fr 1fr;gap:28px;align-items:center}
+@media(max-width:960px){.viewer{grid-template-columns:1fr}}
+.viewer .frame img{width:100%;cursor:zoom-in}
+.viewer .frame iframe{width:100%;height:560px;border:0;display:block;background:#fff}
+.note-box h3{font-size:22px;margin-bottom:10px}
+.note-box p{color:var(--muted);font-size:15px;margin-bottom:12px}
+.try{margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.try div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:13.5px;color:#c7d4f2}
+.try div b{display:block;color:var(--sky);font-size:12px;letter-spacing:.1em;margin-bottom:6px}
+@media(max-width:960px){.try{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.try{grid-template-columns:1fr}}
+
+/* UAT */
+.uat-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:26px}
+@media(max-width:960px){.uat-grid{grid-template-columns:1fr}}
+.bars{display:grid;gap:26px}
+.bar-lab{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:#c7d4f2}
+.bar-lab b{color:#fff}
+.stack{display:flex;height:38px;border-radius:10px;overflow:hidden;background:var(--bg)}
+.stack i{display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;color:#06101f;transition:width 1.2s cubic-bezier(.2,.8,.2,1);width:0}
+.s-ok{background:var(--ok)}.s-bad{background:var(--red);color:#fff!important}.s-na{background:var(--amber)}.s-un{background:#9aa7c7}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:4px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;background:var(--c)}
+.scn{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sc{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px;color:#c7d4f2}
+.sc em{font-style:normal;font-weight:800;color:var(--muted);font-size:11px;min-width:46px}
+.sc .d{width:11px;height:11px;border-radius:50%;flex:none}
+.sc .a{color:var(--muted);font-size:11px}
+.d.ok{background:var(--ok)}.d.bad{background:var(--red)}.d.na{background:var(--amber)}
+@media(max-width:520px){.scn{grid-template-columns:1fr}}
+
+/* DECISIONS */
+.dec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:860px){.dec-grid{grid-template-columns:1fr}}
+.dec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 26px}
+.dec .k{font-size:11px;letter-spacing:.16em;color:var(--sky);font-weight:800}
+.dec h3{margin:6px 0 8px;font-size:17px}.dec p{font-size:14px;color:var(--muted)}
+.limits{margin-top:30px;border:1px solid rgba(255,184,77,.3);background:rgba(255,184,77,.06);border-radius:16px;padding:26px 30px}
+.limits h3{color:var(--amber);margin-bottom:12px}
+.limits ul{list-style:none;display:grid;gap:8px;font-size:14px;color:#ffe3b3;grid-template-columns:1fr 1fr}
+.limits li::before{content:"› ";color:var(--amber);font-weight:900}
+@media(max-width:760px){.limits ul{grid-template-columns:1fr}}
+
+/* DOCS + FOOT */
+.dl{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.dl{grid-template-columns:1fr}}
+.dl a{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;gap:16px;align-items:center;transition:.25s}
+.dl a:hover{border-color:var(--blue);transform:translateY(-4px)}
+.dl .ic{width:48px;height:48px;border-radius:13px;background:rgba(47,123,255,.18);display:grid;place-items:center;font-size:22px;flex:none}
+.dl b{display:block;font-size:15px}.dl span{font-size:12.5px;color:var(--muted)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
+footer{padding:50px 0 60px;border-top:1px solid var(--line);margin-top:40px;text-align:center;color:var(--muted);font-size:13.5px}
+footer b{color:var(--amber)}
+
+/* LIGHTBOX */
+#lb{position:fixed;inset:0;background:rgba(3,7,16,.94);z-index:100;display:none;overflow:auto;padding:60px 20px 30px}
+#lb.on{display:block}
+#lb img{margin:0 auto;background:#fff;border-radius:8px;max-width:none;width:min(100%,1500px);cursor:zoom-in}
+#lb.full img{width:auto;max-width:none;cursor:zoom-out}
+#lb .x{position:fixed;right:20px;top:14px;background:var(--blue);color:#fff;border:0;border-radius:99px;padding:9px 20px;font:700 14px inherit;font-family:inherit;cursor:pointer;z-index:2}
+#lb .h{position:fixed;left:24px;top:20px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#top" class="brand"><i>▲</i> LinkFlow CRM</a>
+    <div class="links">
+      <a href="#overview">Overview</a><a href="#process">Process</a><a href="#problem">Problem</a><a href="#solution">Solution</a><a href="#requirements">Requirements</a><a href="#data">Data</a><a href="#prototype">Prototype</a><a href="#testing">Testing</a><a href="#decisions">Decisions</a>
+    </div>
+    <a class="btn primary" href="#prototype">Try the prototype</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <small>● Simulated BA project · fictional client “NetVina”</small>
+      <h1>LinkFlow <em>CRM</em><span>A B2B CRM business analysis case study, from first elicitation to UAT.</span></h1>
+      <p>One shared customer record for Marketing, Sales, Engineering, Accounting and Customer Service, replacing handoffs over chat with gates, required fields and SLAs.</p>
+      <div class="cta">
+        <a class="btn primary" href="#prototype">▶ Explore the prototype</a>
+        <a class="btn ghost" href="assets/docs/LinkFlow-CRM-Project-Dossier-VI.pdf" target="_blank" rel="noopener">Project dossier (PDF, Vietnamese)</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="frame"><div class="bar"><i></i><i></i><i></i><span>LinkFlow CRM · Today</span></div><img src="assets/shots/today.png" alt="LinkFlow CRM Today screen"></div>
+      <div class="chip c1"><b>36</b><span>User Stories</span></div>
+      <div class="chip c2"><b>66<em>/67</em></b><span>UAT steps passed, round 2</span></div>
+      <div class="chip c3"><b>317</b><span>Test Cases</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="stats"><div class="wrap"><div class="grid reveal">
+  <div class="stat"><b data-n="11">11</b><span>Pain points analysed</span></div>
+  <div class="stat"><b data-n="19">19</b><span>Business Rules</span></div>
+  <div class="stat"><b data-n="36">36</b><span>User Stories</span></div>
+  <div class="stat"><b data-n="193">193</b><span>Acceptance Criteria</span></div>
+  <div class="stat"><b data-n="60">60</b><span>SRS requirements</span></div>
+  <div class="stat"><b data-n="20">20</b><span>Non-functional requirements</span></div>
+  <div class="stat"><b data-n="17">17</b><span>Tables in the ERD</span></div>
+  <div class="stat"><b data-n="25">25</b><span>Report metrics defined</span></div>
+</div></div></div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Project overview</div>
+      <h2>One customer, <em>one record</em>, three clear handoffs</h2>
+      <p class="lead">NetVina is an imaginary SME selling internet, cameras and digital infrastructure services to businesses. This project takes the BA through the whole chain on a single product, working solo as analyst, product owner and prototype builder.</p>
+    </div>
+    <div class="three">
+      <div class="svc reveal"><div class="ico">⚠</div><small>The problem</small><h3>Five teams, five tools</h3><p>Marketing, Sales, Engineering, Accounting and Customer Service each track customers separately and hand work over by chat. Leads wait, handoff details go missing, invoices are redone, and nobody sees where a customer stands.</p></div>
+      <div class="svc hot reveal"><div class="ico">◎</div><small>The solution</small><h3>LinkFlow CRM</h3><p>A lean B2B CRM built around a unified customer profile, with three independent status streams owned by three teams, three Handoff Gates with mandatory fields, and SLAs counted in working hours.</p></div>
+      <div class="svc reveal"><div class="ico">✔</div><small>The outcome</small><h3>Specified, built, tested</h3><p>A full requirements set with traceability, a working HTML prototype, 317 test cases and two simulated UAT rounds: 43 of 67 steps passed in round 1, 66 of 67 in round 2.</p></div>
+    </div>
+    <div class="fact-row reveal">
+      <span class="tag">Domain: B2B CRM · Order-to-Activation</span>
+      <span class="tag">Method: Agile, Sprint 0 to Sprint 5</span>
+      <span class="tag">Role: Business Analyst (solo)</span>
+      <span class="tag warn">All data is sample data</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">How the work was done</div>
+      <h2>The BA lifecycle, <em>end to end</em></h2>
+      <p class="lead">Six stages, each with concrete deliverables.</p>
+    </div>
+    <div class="timeline">
+      <div class="step reveal"><div class="n">1</div><em>SPRINT 0</em><h3>Initiate &amp; scope</h3><p>Business Case, Stakeholder Register, Scope Statement (In/Out), CRM desk research</p></div>
+      <div class="step reveal"><div class="n">2</div><em>SPRINT 0-1</em><h3>Elicit requirements</h3><p>Elicitation summary, 11 pain points, assumptions log, first User Stories</p></div>
+      <div class="step reveal"><div class="n">3</div><em>SPRINT 1-2</em><h3>Analyse &amp; model</h3><p>BPMN As-Is and To-Be, three State Diagrams, ERD and data dictionary</p></div>
+      <div class="step reveal"><div class="n">4</div><em>SPRINT 3-4</em><h3>Specify &amp; design</h3><p>BRD, 36 User Stories, SRS, NFRs, permissions, traceability, SQL, prototype</p></div>
+      <div class="step reveal"><div class="n">5</div><em>SPRINT 5</em><h3>Test &amp; UAT</h3><p>317 Test Cases, 12 UAT scenarios, two runs, defect log</p></div>
+      <div class="step reveal"><div class="n">6</div><em>SPRINT 5</em><h3>Hand over</h3><p>User Manual, project dossier, portfolio package</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">As-Is analysis</div>
+      <h2>Where the process <em>breaks</em></h2>
+      <p class="lead">The current flow depends on people remembering to message each other. The five pains below drove most of the requirements.</p>
+    </div>
+    <div class="pp-grid reveal">
+      <div class="pp"><b>01</b><h3>Slow lead response</h3><p>Leads sit unassigned with no owner or deadline.</p></div>
+      <div class="pp"><b>02</b><h3>Incomplete handoffs</h3><p>Sales passes a signed deal to Engineering without address, contact or access times.</p></div>
+      <div class="pp"><b>03</b><h3>Invoices redone</h3><p>Invoice details are collected late and in the wrong format.</p></div>
+      <div class="pp"><b>04</b><h3>Numbers disagree</h3><p>“Contracts signed” and “deposits received” do not match; both get called “confirmed”.</p></div>
+      <div class="pp"><b>05</b><h3>No single view</h3><p>Nobody can see which step a customer is at without asking around.</p></div>
+    </div>
+    <div class="paper reveal" data-zoom="assets/diagrams/bpmn-as-is.png"><span class="zoom">Click to zoom</span><img src="assets/diagrams/bpmn-as-is.png" alt="BPMN As-Is process" loading="lazy"></div>
+    <p class="cap">BPMN As-Is (swimlane). Labels are in Vietnamese, the language of the simulated stakeholders. Source: project folder 03_Mo_hinh_hoa.</p>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">To-Be design</div>
+      <h2>Three streams, <em>three gates</em></h2>
+      <p class="lead">“Confirmed” used to mean different things to different teams. The design splits one fuzzy status into three, each owned by exactly one team, and connects them with Handoff Gates.</p>
+    </div>
+
+    <div class="streams reveal">
+      <div class="row"><div class="rl c">COMMERCIAL<small>Owner: Sales</small></div>
+        <div class="chain c"><div class="gate"><b>1</b></div><span class="st">New lead</span><span class="arr">→</span><span class="st">Contacted</span><span class="arr">→</span><span class="st">Consulting</span><span class="arr">→</span><span class="st">Quoted</span><span class="arr">→</span><span class="st">Negotiating</span><span class="arr">→</span><span class="st">Signed</span></div></div>
+      <div class="opens">“Signed” opens the Payment and Deployment streams in parallel</div>
+      <div class="row"><div class="rl p">PAYMENT<small>Owner: Accounting</small></div>
+        <div class="chain p"><span class="st">Unpaid</span><span class="arr">→</span><span class="st">Deposit paid</span><span class="arr">→</span><span class="st">Settled</span></div></div>
+      <div class="row"><div class="rl d">DEPLOYMENT<small>Owner: Engineering</small></div>
+        <div class="chain d"><div class="gate"><b>2</b></div><span class="st">Awaiting handoff</span><span class="arr">→</span><span class="st">Survey</span><span class="arr">→</span><span class="st">Installation</span><span class="arr">→</span><span class="st">Acceptance</span><div class="gate"><b>3</b></div><span class="st">In use</span></div></div>
+    </div>
+
+    <div class="gates reveal">
+      <div class="g"><div class="gate"><b>1</b></div><div><h3>Marketing → Sales</h3><p>A lead enters the queue only with minimum contact data. The sales manager must assign it within <b>2 working hours</b>, otherwise it is flagged overdue.</p></div></div>
+      <div class="g"><div class="gate"><b>2</b></div><div><h3>Sales → Engineering</h3><p>A signed deal can be handed off only when <b>four required fields</b> are filled. Engineering must confirm “Received” within <b>4 working hours</b>, or return it with a reason.</p></div></div>
+      <div class="g"><div class="gate"><b>3</b></div><div><h3>Engineering → Accounting &amp; CS</h3><p>Acceptance notifies Accounting and Customer Service automatically, so invoicing and aftercare start from the same fact.</p></div></div>
+    </div>
+    <div class="why reveal"><b>Why split the status?</b> Sales reports on “Signed”, Accounting on “Deposit paid / Settled”, Engineering on “Accepted”. Every report now states which milestone it counts, so contract and invoice figures stop disagreeing (BR-01).</div>
+
+    <div class="rules reveal">
+      <div class="rule"><b>BR-01</b><p>Commercial, Payment and Deployment statuses are independent and each has one owner.</p></div>
+      <div class="rule"><b>BR-03</b><p>A discount above 10% needs approval from the sales manager; a manager’s own request goes to the Director.</p></div>
+      <div class="rule"><b>BR-04</b><p>Handoff requires installation address, on-site contact, phone number and access time window.</p></div>
+      <div class="rule"><b>BR-06</b><p>A tax code is unique per customer; a duplicate shows the owning account but not its content.</p></div>
+    </div>
+
+    <h3 style="margin:10px 0 16px" class="reveal">Deal state rules</h3>
+    <div class="three reveal" style="margin-bottom:34px">
+      <div class="card"><b style="color:var(--blue2)">Before signing</b><p class="cap" style="margin-top:8px">Owner or sales manager can move a deal forward or back between Contact, Consulting, Quote and Negotiation. Every move is written to history.</p></div>
+      <div class="card"><b style="color:var(--blue2)">Closing</b><p class="cap" style="margin-top:8px">“Signed” requires a signing date and the applied discount. “Lost” requires a reason picked from a fixed list.</p></div>
+      <div class="card"><b style="color:var(--blue2)">Deployment</b><p class="cap" style="margin-top:8px">Moves one step at a time: no skipping and no going back. Acceptance needs a date that is not in the future.</p></div>
+    </div>
+
+    <div class="paper reveal" data-zoom="assets/diagrams/bpmn-to-be.png"><span class="zoom">Click to zoom</span><img src="assets/diagrams/bpmn-to-be.png" alt="BPMN To-Be process" loading="lazy"></div>
+    <p class="cap">BPMN To-Be (swimlane): the same flow with the three gates, discount approval and SLA timers added. Labels are in Vietnamese.</p>
+  </div>
+</section>
+
+<!-- REQUIREMENTS -->
+<section id="requirements">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Requirements &amp; specification</div>
+      <h2>From pain point to <em>test case</em>, traceable</h2>
+      <p class="lead">Every requirement can be followed forward to a test and backward to the problem it solves.</p>
+    </div>
+
+    <div class="doc-stack reveal">
+      <div class="doc"><b>BRD v1.1</b><span>Business requirements with 19 Business Rules</span></div>
+      <div class="doc"><b>36 stories</b><span>193 Acceptance Criteria in Given/When/Then style</span></div>
+      <div class="doc"><b>SRS</b><span>60 numbered requirements for the handoff gates</span></div>
+      <div class="doc"><b>20 NFRs</b><span>Each with a measurable criterion, plus a role permission matrix</span></div>
+    </div>
+
+    <div class="two">
+      <div class="card story reveal">
+        <span class="tag">Sample · US-M5-02</span>
+        <div class="as">As an <b>Engineering</b> user, I want to <b>confirm that I received a handoff</b> so that <b>Sales knows work has started and the SLA clock stops</b>.</div>
+        <div class="gwt"><b>GIVEN</b> a handoff form is in “Awaiting handoff” with a deadline of 13:00</div>
+        <div class="gwt"><b>WHEN</b> Engineering presses “Received” before 13:00</div>
+        <div class="gwt"><b>THEN</b> the form becomes “Received” and is locked; the receiver and time are recorded; Sales gets an in-app notification.</div>
+        <div class="gwt"><b>AND</b> only the Engineering role can do this, checked on the system side, not only by hiding the button.</div>
+        <p class="cap">Illustrative extract assembled from US-M5-02 rules and UAT-02 step 4; the full story has 6 Acceptance Criteria.</p>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin-bottom:14px">Module M5: Handoff &amp; deployment</h3>
+        <table class="tbl">
+          <tr><th>ID</th><th>Story</th><th>Priority</th><th>AC</th></tr>
+          <tr><td>M5-01</td><td>Send handoff form to Engineering</td><td><span class="tag">Must</span></td><td>8</td></tr>
+          <tr><td>M5-02</td><td>Confirm “Received”</td><td><span class="tag">Must</span></td><td>6</td></tr>
+          <tr><td>M5-03</td><td>Overdue handoff alert</td><td><span class="tag">Must</span></td><td>5</td></tr>
+          <tr><td>M5-04</td><td>Return an incomplete form</td><td><span class="tag warn">Should</span></td><td>5</td></tr>
+          <tr><td>M5-05</td><td>Update deployment status</td><td><span class="tag">Must</span></td><td>7</td></tr>
+          <tr><td>M5-06</td><td>View deployment progress on profile</td><td><span class="tag">Must</span></td><td>4</td></tr>
+          <tr><td>M5-07</td><td>Notify on acceptance</td><td><span class="tag">Must</span></td><td>5</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h3 style="margin:46px 0 6px;text-align:center" class="reveal">Traceability chain</h3>
+    <div class="trace reveal">
+      <div class="tn"><em>PP</em><b>11</b><span>Pain points</span></div><div class="ta">→</div>
+      <div class="tn"><em>FR</em><b>17</b><span>Functional req.</span></div><div class="ta">→</div>
+      <div class="tn"><em>BR</em><b>19</b><span>Business Rules</span></div><div class="ta">→</div>
+      <div class="tn"><em>US</em><b>36</b><span>User Stories</span></div><div class="ta">→</div>
+      <div class="tn"><em>SRS</em><b>60</b><span>Requirements</span></div><div class="ta">→</div>
+      <div class="tn"><em>NFR</em><b>20</b><span>Measurable</span></div><div class="ta">→</div>
+      <div class="tn"><em>TC</em><b>317</b><span>Test Cases</span></div>
+    </div>
+    <div class="ex reveal">Example path: <b>Incomplete handoffs</b> → <code>FR-06</code> → <code>BR-04</code> → <code>US-M5-01…04</code> → <code>UAT-02</code>, <code>UAT-03</code></div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Data &amp; reporting</div>
+      <h2>A data model that <em>answers the questions</em></h2>
+      <p class="lead">The ERD was designed together with the reports, so each of the 25 defined metrics can be computed from stored data.</p>
+    </div>
+    <div class="data-grid">
+      <div>
+        <div class="paper reveal" data-zoom="assets/diagrams/erd.png"><span class="zoom">Click to zoom</span><img src="assets/diagrams/erd.png" alt="Entity relationship diagram" loading="lazy"></div>
+        <p class="cap">ERD, 17 tables. This figure is version 0.3 and predates change request CR-03 below; the data dictionary document includes the column.</p>
+      </div>
+      <div class="reveal">
+        <ul class="bullets">
+          <li><span><b>Traceable origin.</b> Each deal keeps its lead, source and campaign, so conversion can be reported by channel.</span></li>
+          <li><span><b>Stage history table.</b> Every stage change stores who and when, which makes “stuck deal” and time-in-stage reports possible.</span></li>
+          <li><span><b>CR-03, found while writing report definitions.</b> The applied discount was not stored, so discount reports could not be checked against approvals. A column for the applied discount was added to the deal, validated against the approved request.</span></li>
+          <li><span><b>Constraints in the database.</b> Unique tax code, required handoff fields and valid status values are enforced by schema, then verified with deliberate violation tests.</span></li>
+        </ul>
+        <div class="sql">
+          <span class="tag">PostgreSQL schema + sample data</span><span class="tag">9 CSV tables</span><span class="tag">Data validation queries</span><span class="tag">Constraint tests</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOTYPE -->
+<section id="prototype" class="proto">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">Working prototype</div>
+      <h2>Click through the <em>real thing</em></h2>
+      <p class="lead">A single-file HTML and JavaScript prototype with nine roles, a demo clock and role-based permissions. Prototype screens are in Vietnamese, matching the simulated users.</p>
+    </div>
+
+    <div class="tabs reveal" id="tabs">
+      <button class="on" data-i="0">Today</button>
+      <button data-i="1">Unified customer profile</button>
+      <button data-i="2">Handoff</button>
+      <button data-i="3">Discount approval</button>
+      <button data-i="4">Reports</button>
+      <button data-i="5" style="margin-left:auto;background:var(--blue);color:#fff;border-color:var(--blue)">▶ Run live demo</button>
+    </div>
+    <div class="viewer reveal">
+      <div class="frame" id="vf"><div class="bar"><i></i><i></i><i></i><span id="vt">LinkFlow CRM · Today</span></div><div id="vb"><img id="vimg" src="assets/shots/today.png" alt="" data-zoom="assets/shots/today.png"></div></div>
+      <div class="note-box">
+        <h3 id="vh">Today</h3>
+        <p id="vp">Each salesperson sees only their own work. Overdue tasks come first, and “Done and quick log” records an interaction in under 30 seconds.</p>
+        <a class="btn ghost" href="prototype/index.html" target="_blank" rel="noopener">Open full screen ↗</a>
+      </div>
+    </div>
+
+    <div class="try reveal">
+      <div><b>STEP 1 · ENGINEERING</b>Open Handoff. A form is waiting, with a 4-working-hour deadline. Try “Received” or “Return”.</div>
+      <div><b>STEP 2 · SALES MANAGER</b>Open Discount approval. Approve or reject a request above 10%; rejection needs a reason.</div>
+      <div><b>STEP 3 · SALES REP</b>Open a customer profile: three status streams, discount, invoice data and timeline in one place.</div>
+      <div><b>STEP 4 · SALES MANAGER</b>Open Reports. Change the period and the “stuck deal” threshold and watch figures and flags update.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTING -->
+<section id="testing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Testing &amp; UAT</div>
+      <h2>Tested twice, <em>fixed in between</em></h2>
+      <p class="lead">12 UAT scenarios with 67 steps were executed against the prototype after 317 Test Cases were written. Round 1 exposed missing features and defects; round 2 followed the fixes.</p>
+    </div>
+
+    <div class="uat-grid">
+      <div class="card reveal">
+        <div class="bars" id="bars">
+          <div>
+            <div class="bar-lab"><span><b>Round 1</b> · before fixes</span><span>67 steps</span></div>
+            <div class="stack"><i class="s-ok" data-w="43">43</i><i class="s-bad" data-w="4">4</i><i class="s-na" data-w="19">19</i><i class="s-un" data-w="1"></i></div>
+          </div>
+          <div>
+            <div class="bar-lab"><span><b>Round 2</b> · after fixes</span><span>67 steps</span></div>
+            <div class="stack"><i class="s-ok" data-w="66">66</i><i class="s-un" data-w="1"></i></div>
+          </div>
+          <div class="legend"><span style="--c:var(--ok)">Passed</span><span style="--c:var(--red)">Failed</span><span style="--c:var(--amber)">Feature not built yet</span><span style="--c:#9aa7c7">Not verified</span></div>
+        </div>
+        <h3 style="margin:30px 0 12px;font-size:16px">12 scenarios: round 1 → round 2</h3>
+        <div class="scn">
+          <div class="sc"><em>UAT-01</em><i class="d bad"></i>Lead to signed contract <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-02</em><i class="d bad"></i>Handoff within SLA <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-03</em><i class="d ok"></i>Overdue then returned <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-04</em><i class="d na"></i>Deployment to acceptance <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-05</em><i class="d na"></i>Invoice data &amp; payment <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-06</em><i class="d ok"></i>Discount above threshold <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-07</em><i class="d ok"></i>A sales rep’s day <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-08</em><i class="d na"></i>Import &amp; duplicate block <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-09</em><i class="d ok"></i>Reassign when rep leaves <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-10</em><i class="d na"></i>Management dashboard <span class="a">→ open</span></div>
+          <div class="sc"><em>UAT-11</em><i class="d ok"></i>Unified profile by role <span class="a">→ ✔</span></div>
+          <div class="sc"><em>UAT-12</em><i class="d bad"></i>System-wide permissions <span class="a">→ ✔</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <h3 style="margin-bottom:6px">Defect log (7 found, 7 fixed)</h3>
+        <table class="tbl">
+          <tr><th>ID</th><th>Finding</th><th>Severity</th></tr>
+          <tr><td>D-01</td><td>Notifications were plain text with no link to the form or profile</td><td><span class="tag warn">Medium</span></td></tr>
+          <tr><td>D-02</td><td>Original source and campaign not shown on the deal</td><td><span class="tag warn">Medium</span></td></tr>
+          <tr><td>D-03</td><td>“Reassign customers” had no server-side role check</td><td><span class="tag warn">Medium</span></td></tr>
+          <tr><td>D-04</td><td>“Mark employee inactive” had no role check</td><td><span class="tag warn">Medium</span></td></tr>
+          <tr><td>D-05</td><td>Menu showed items the role may not use</td><td><span class="tag">Low</span></td></tr>
+          <tr><td>D-06</td><td>Demo clock offered only 6 fixed time points</td><td><span class="tag">Low</span></td></tr>
+          <tr><td>D-07</td><td>Lost-reason label differed from the User Story</td><td><span class="tag">Low</span></td></tr>
+        </table>
+        <p class="cap" style="margin-top:16px"><b style="color:#fff">Gaps.</b> Round 1 also found 9 requirements the prototype had not implemented yet (G-01 to G-09). Eight were built and re-tested. G-09, reconciling dashboard figures with the report specification, remains open because the prototype computes from its own sample data.</p>
+        <p class="cap">UAT was run with browser automation on the prototype by the author, so it demonstrates the method and the traceability, not real stakeholder sign-off.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DECISIONS -->
+<section id="decisions" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Analyst judgement</div>
+      <h2>Decisions, <em>and their reasons</em></h2>
+    </div>
+    <div class="dec-grid">
+      <div class="dec reveal"><div class="k">DECISION 1</div><h3>Split “confirmed” into three statuses</h3><p>Each team reports its own milestone, and every report names the milestone it counts. This removes the mismatch between signed contracts and invoiced amounts.</p></div>
+      <div class="dec reveal"><div class="k">DECISION 2</div><h3>Required fields at the gate, not reminders</h3><p>A reminder cannot stop incomplete information from crossing a handoff; a blocked form can.</p></div>
+      <div class="dec reveal"><div class="k">DECISION 3</div><h3>SLA in working hours, including after-hours leads</h3><p>A lead arriving at 19:00 starts its clock at the next working day, so the SLA is fair and measurable.</p></div>
+      <div class="dec reveal"><div class="k">DECISION 4</div><h3>Cut Should before Must</h3><p>If time ran short, items like “return an incomplete form” and lead import would go first; renewal reminders were deferred to Phase 2.</p></div>
+    </div>
+    <div class="limits reveal">
+      <h3>Limitations, stated plainly</h3>
+      <ul>
+        <li>Interviews, pain points and baselines are assumptions; no real stakeholders were involved.</li>
+        <li>CRM desk research uses public vendor documentation, not hands-on trials.</li>
+        <li>UAT ran through automated browser scripts on the prototype; per-Test-Case results are not recorded.</li>
+        <li>The prototype has no real login, security, or Zalo/email notifications; import reads .csv only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DOCS -->
+<section id="documents">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">Deliverables</div>
+      <h2>Take a <em>closer look</em></h2>
+      <p class="lead">The full package (BRD, User Stories, SRS, SQL, Test Cases, UAT results, User Manual) is organised by stage in the project folder.</p>
+    </div>
+    <div class="dl reveal">
+      <a href="assets/docs/LinkFlow-CRM-Project-Dossier-VI.pdf" target="_blank" rel="noopener"><div class="ic">📄</div><div><b>Project dossier</b><span>15-page overview · PDF · Vietnamese</span></div></a>
+      <a href="prototype/index.html" target="_blank" rel="noopener"><div class="ic">🖥</div><div><b>Interactive prototype</b><span>Single HTML file · opens in any browser</span></div></a>
+      <a href="https://nhulinh654-sys.github.io/linkCRM_prj/" target="_blank" rel="noopener"><div class="ic">🌐</div><div><b>Hosted prototype</b><span>GitHub Pages copy</span></div></a>
+    </div>
+    <div class="tools reveal">
+      <span class="tag">Google Sheets · Kanban by sprint</span><span class="tag">draw.io · BPMN, State, ERD</span><span class="tag">PostgreSQL</span><span class="tag">HTML / JavaScript</span><span class="tag">Word · BRD, SRS, User Stories</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Simulated project.</b> NetVina, its people, data and results are fictional and were created for practice. No real business figures are used.</p>
+  </div>
+</footer>
+
+<div id="lb"><span class="h">Click image to toggle size · Esc to close</span><button class="x">Close ✕</button><img alt=""></div>
+
+<script>
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// nav highlight
+const secs=[...document.querySelectorAll('section[id]')],navs=[...document.querySelectorAll('.links a')];
+addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(scrollY>=s.offsetTop-140)cur=s.id});navs.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))},{passive:true});
+
+// counters
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const t=+e.target.dataset.n;let s=null;const f=ts=>{s=s||ts;const p=Math.min((ts-s)/1100,1);e.target.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}),{threshold:.6});
+document.querySelectorAll('[data-n]').forEach(el=>cio.observe(el));
+
+// UAT bars
+const bio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;bio.unobserve(e.target);e.target.querySelectorAll('.stack i').forEach(i=>i.style.width=(i.dataset.w/67*100)+'%')}),{threshold:.4});
+bio.observe(document.getElementById('bars'));
+
+// lightbox
+const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
+function openLB(src){lbi.src=src;lb.classList.remove('full');lb.classList.add('on');lb.scrollTop=0;lb.scrollLeft=0}
+document.addEventListener('click',e=>{const z=e.target.closest('[data-zoom]');if(z&&!e.target.closest('iframe')){openLB(z.dataset.zoom)}});
+lbi.addEventListener('click',e=>{e.stopPropagation();lb.classList.toggle('full')});
+lb.addEventListener('click',e=>{if(e.target===lb||e.target.classList.contains('x'))lb.classList.remove('on')});
+addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on')});
+
+// prototype viewer
+const shots=[
+ {s:'assets/shots/today.png',t:'LinkFlow CRM · Today',h:'Today',p:'Each salesperson sees only their own work. Overdue tasks come first, and “Done and quick log” records an interaction in under 30 seconds.'},
+ {s:'assets/shots/customer-profile.png',t:'LinkFlow CRM · Customer profile',h:'Unified customer profile',p:'Commercial, Payment and Deployment status, discount, invoice data and the full timeline on one screen, with sections shown according to role.'},
+ {s:'assets/shots/handoff.png',t:'LinkFlow CRM · Handoff',h:'Handoff gate',p:'Engineering sees waiting forms with a deadline counted in working hours, and can confirm “Received” or return a form with a reason.'},
+ {s:'assets/shots/discount-approval.png',t:'LinkFlow CRM · Discount approval',h:'Discount approval',p:'Requests above 10% need a reason and an approver. History is kept, and a rep cannot sign above the approved discount.'},
+ {s:'assets/shots/reports.png',t:'LinkFlow CRM · Reports',h:'Role-based reports',p:'Figures state which milestone they count. Period and stuck-deal threshold are adjustable, and numbers match across screens.'}
+];
+const vb=document.getElementById('vb'),vt=document.getElementById('vt'),vh=document.getElementById('vh'),vp=document.getElementById('vp');
+document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('on'));
+  const i=+b.dataset.i;
+  if(i===5){b.classList.add('on');vt.textContent='LinkFlow CRM · Live prototype';vh.textContent='Live demo';vp.textContent='This is the actual prototype running in the page. Use the role selector at the top and the demo clock to follow the “Try it” steps below.';vb.innerHTML='<iframe src="prototype/index.html" title="LinkFlow CRM prototype"></iframe>';return}
+  b.classList.add('on');const d=shots[i];vt.textContent=d.t;vh.textContent=d.h;vp.textContent=d.p;
+  vb.innerHTML='<img src="'+d.s+'" alt="'+d.h+'" data-zoom="'+d.s+'">';
+}));
+</script>
+</body>
+</html>

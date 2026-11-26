@@ -1,0 +1,9 @@
+﻿user_id,ho_ten,email,vai_tro,dang_hoat_dong
+1,Giám đốc (mẫu),giamdoc@example.com,giam_doc,t
+2,Lan,lan@example.com,nhan_vien_kd,t
+3,Hùng,hung@example.com,nhan_vien_kd,t
+4,Trưởng phòng KD (mẫu),tpkd@example.com,truong_phong_kd,t
+5,Marketing (mẫu),mkt@example.com,marketing,t
+6,Kỹ thuật (mẫu),kythuat@example.com,ky_thuat,t
+7,Kế toán (mẫu),ketoan@example.com,ke_toan,t
+8,CSKH (mẫu),cskh@example.com,cskh,t

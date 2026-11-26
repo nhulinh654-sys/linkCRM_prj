@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LinkFlow CRM - Prototype M4, M2, M5, hồ sơ khách hàng thống nhất, M6 Duyệt giảm giá, M7 Báo cáo (T-21, T-22, T-26, T-27, T-31, T-35)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f172a;--navy2:#1e293b;--acc:#2563eb;--accbg:#eff6ff;--bg:#f4f6fa;--line:#e2e8f0;--tx:#0f172a;--mut:#64748b;--red:#dc2626;--redbg:#fef2f2;--grn:#16a34a;--grnbg:#f0fdf4;--amb:#d97706;--ambbg:#fffbeb}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,sans-serif;font-size:14px;color:var(--tx);background:var(--bg)}
+button,select,input,textarea{font:inherit;color:inherit}
+#app{display:flex;min-height:100vh}
+.side{width:220px;background:var(--navy);color:#cbd5e1;flex:none;display:flex;flex-direction:column;padding:16px 12px;position:sticky;top:0;height:100vh}
+.logo{font-weight:700;color:#fff;font-size:16px;padding:6px 8px 18px;display:flex;align-items:center;gap:8px}
+.logo i{width:10px;height:20px;background:var(--acc);border-radius:3px;display:inline-block}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;border:0;background:none;width:100%;text-align:left;color:#cbd5e1}
+.nav:hover{background:var(--navy2)}
+.nav.on{background:var(--acc);color:#fff}
+.nav.dis{opacity:.45;cursor:not-allowed}
+.nav .bd{margin-left:auto;font-size:11px;font-weight:600;border-radius:10px;padding:1px 7px;background:#475569;color:#fff}
+.nav .bd.red{background:var(--red)}
+.nav svg{width:16px;height:16px;flex:none}
+.sidefoot{margin-top:auto;font-size:11px;color:#94a3b8;line-height:1.5;padding:8px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.top h1{font-size:18px;margin:0;font-weight:700}
+.top .sp{flex:1}
+.ctl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+.ctl select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff;font-size:13px}
+.bell{position:relative;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+.bell b{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:10px;font-size:10px;padding:1px 6px}
+.np{position:absolute;right:24px;top:56px;width:340px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(15,23,42,.15);z-index:20;max-height:380px;overflow:auto}
+.np h4{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px}
+.np div.it{padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px}
+.np div.it small{display:block;color:var(--mut);margin-top:2px}
+.content{padding:20px 24px 40px;max-width:1180px;width:100%}
+.banner{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;border:1px solid var(--line);background:#fff}
+.banner.info{background:var(--accbg);border-color:#bfdbfe;color:#1e40af}
+.banner.warn{background:var(--ambbg);border-color:#fde68a;color:#92400e}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card small{color:var(--mut);display:block;margin-bottom:4px}
+.card b{font-size:24px}
+.card.red b{color:var(--red)}
+.sec{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.sec>h3{margin:0;padding:12px 16px;font-size:13px;font-weight:600;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;background:#fafbfd}
+.sec>h3.red{color:var(--red);background:var(--redbg)}
+.row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row.click{cursor:pointer}.row.click:hover{background:#f8fafc}
+.row.od{background:#fffafa}
+.tm{min-width:64px;font-weight:600;font-variant-numeric:tabular-nums}
+.od .tm{color:var(--red)}
+.grow{flex:1;min-width:0}
+.grow b{display:block}
+.grow small{color:var(--mut)}
+.late{color:var(--red);font-weight:600;font-size:12px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
+.btn:hover{background:#f1f5f9}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}.btn.pri:hover{background:#1d4ed8}
+.btn.sm{padding:4px 10px;font-size:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty{padding:36px 16px;text-align:center;color:var(--mut)}
+.tag{display:inline-block;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;background:#e2e8f0;color:#334155}
+.tag.red{background:var(--redbg);color:var(--red)}.tag.grn{background:var(--grnbg);color:var(--grn)}.tag.amb{background:var(--ambbg);color:var(--amb)}.tag.blu{background:var(--accbg);color:var(--acc)}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;text-align:left;color:var(--mut);font-weight:600;padding:10px 14px;background:#fafbfd;border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.od td{background:#fffafa}
+.tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.tab{border:0;background:none;padding:9px 14px;cursor:pointer;color:var(--mut);border-bottom:2px solid transparent;font-weight:500}
+.tab.on{color:var(--acc);border-color:var(--acc);font-weight:600}
+.bar{display:flex;gap:10px;align-items:center;padding:10px 16px;background:var(--accbg);border-bottom:1px solid #bfdbfe;flex-wrap:wrap}
+.bar select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff}
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.md{background:#fff;border-radius:14px;width:520px;max-width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.mh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.mh b{font-size:16px;flex:1}
+.mh .x{border:0;background:none;font-size:22px;cursor:pointer;color:var(--mut);line-height:1}
+.mb{padding:16px 18px}
+.mf{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+.fld{margin-bottom:14px}
+.fld>label{display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:#334155}
+.fld i{color:var(--red);font-style:normal}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;cursor:pointer;font-size:13px}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.fld select,.fld input[type=time],.fld textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%}
+.fld textarea{resize:vertical;min-height:64px}
+.two{display:grid;grid-template-columns:1fr 130px;gap:8px}
+.err{color:var(--red);font-size:13px;min-height:18px;margin-top:4px}
+.timer{font-size:12px;background:#f1f5f9;border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums;color:var(--mut)}
+.timer.ok{background:var(--grnbg);color:var(--grn)}.timer.bad{background:var(--redbg);color:var(--red)}
+.fixed{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:720px;max-width:100%;background:#fff;box-shadow:-10px 0 30px rgba(15,23,42,.18);z-index:40;display:flex;flex-direction:column}
+.drawer .dh{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.drawer .db{padding:16px 18px;overflow:auto;flex:1}
+.log{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.log .lt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.log small{color:var(--mut)}
+.deals{display:flex;flex-direction:column;gap:6px;margin:10px 0 16px}
+.deal{display:flex;gap:8px;align-items:center;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;z-index:99;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw}
+.toast.err{background:var(--red)}
+.sum{background:var(--grnbg);border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+.legend{font-size:12px;color:var(--mut);padding:10px 4px}
+.fld input[type=text]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%}
+.fld.bad input,.fld.bad textarea,.fld.bad select{border-color:var(--red);background:var(--redbg)}
+.ferr{color:var(--red);font-size:12px;margin-top:4px;min-height:0}
+.errsum{background:var(--redbg);border:1px solid #fecaca;color:#991b1b;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.6}
+.errsum ul{margin:4px 0 0;padding-left:18px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:6px 12px;font-size:13px;margin-bottom:14px}
+.kv span{color:var(--mut)}
+.hrs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.btn.soft{opacity:.6}
+.md.wide{width:600px}
+.hint{font-size:12px;color:var(--mut);margin-top:4px}
+.dealblk{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.dealblk .dh2{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.sts{display:grid;gap:6px}
+.st{display:flex;align-items:center;gap:10px;font-size:13px}
+.st>span{width:92px;color:var(--mut);flex:none}
+.st>div{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kv2{display:grid;grid-template-columns:120px 1fr 100px 1fr;gap:4px 10px;font-size:13px;margin-bottom:8px}
+.kv2 span{color:var(--mut)}
+.brow{display:grid;grid-template-columns:130px 1fr 260px;gap:10px;align-items:center;padding:6px 16px;font-size:13px}.bt{background:#eef2f7;border-radius:6px;height:10px}.bt i{display:block;height:10px;border-radius:6px;background:var(--acc,#2563eb)}.sg{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sg>.sec{margin-bottom:0}
+.sech{font-size:13px;font-weight:600;margin:16px 0 8px}
+.np div.it.lk{cursor:pointer}.np div.it.lk:hover{background:#f8fafc}.np div.it.rd{opacity:.55}.np .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);margin-right:6px}
+.ctl input[type=time]{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:#fff;font-size:13px}
+@media(max-width:820px){.side{display:none}.row{flex-wrap:wrap}.tm{width:auto}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toastbox"></div>
+<script>
+/* ===== Thời gian demo: phút tuyệt đối. Tuần 0 = tuần trước, tuần 1 = tuần hiện tại ===== */
+const D=1440, DAYS=['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ nhật'];
+const T=(w,d,h,m)=>w*7*D+d*D+h*60+m;
+const dow=t=>Math.floor(t/D)%7, tod=t=>t%D, dayIdx=t=>Math.floor(t/D);
+const p2=n=>String(n).padStart(2,'0');
+const hhmm=t=>p2(Math.floor(tod(t)/60))+':'+p2(tod(t)%60);
+const fmt=t=>DAYS[dow(t)]+' '+hhmm(t);
+const dur=m=>{m=Math.max(0,Math.round(m));if(m<60)return m+' phút';if(m<D){const h=Math.floor(m/60),r=m%60;return h+' giờ'+(r?' '+r+' phút':'')}const d=Math.floor(m/D),h=Math.floor((m%D)/60);return d+' ngày'+(h?' '+h+' giờ':'')};
+/* Giờ làm việc giả định 08:00-17:00, thứ Hai-thứ Sáu; hạn phân bổ = 2 giờ làm việc (A-13) */
+function norm(t){for(;;){const d=dow(t),tm=tod(t);if(d>=5){t=(dayIdx(t)+(7-d))*D+480;continue}if(tm<480){t=dayIdx(t)*D+480;continue}if(tm>=1020){t=(dayIdx(t)+1)*D+480;continue}return t}}
+function addWork(t,mins){t=norm(t);while(mins>0){const end=dayIdx(t)*D+1020,av=end-t;if(mins<=av)return t+mins;mins-=av;t=norm(end)}return t}
+const PRESETS=[['Thứ Ba 14:30 (mặc định)',T(1,1,14,30)],['Thứ Ba 15:01 (việc 15:00 vừa quá hạn)',T(1,1,15,1)],['Thứ Ba 15:31',T(1,1,15,31)],['Thứ Sáu 21:00 (tuần trước)',T(0,4,21,0)],['Thứ Hai 09:59',T(1,0,9,59)],['Thứ Hai 10:00',T(1,0,10,0)]];
+
+/* ===== Dữ liệu mẫu (giả định, không phải dữ liệu thật) ===== */
+const ROLES={
+ tp:{label:'Trưởng phòng KD',short:'Trưởng phòng KD',kind:'tp'},
+ lan:{label:'Lan · Nhân viên KD',short:'Lan',kind:'nv'},
+ hung:{label:'Hùng · Nhân viên KD',short:'Hùng',kind:'nv'},
+ mai:{label:'Mai · Nhân viên KD',short:'Mai',kind:'nv'},
+ cskh:{label:'CSKH',short:'CSKH',kind:'cskh'},
+ ktoan:{label:'Kế toán',short:'Kế toán',kind:'ktoan'},
+ mkt:{label:'Marketing',short:'Marketing',kind:'mkt'},
+ kt:{label:'Kỹ thuật',short:'Kỹ thuật',kind:'kt'},
+ gd:{label:'Giám đốc',short:'Giám đốc',kind:'gd'}};
+const EMP={lan:{name:'Lan',active:true},hung:{name:'Hùng',active:true},mai:{name:'Mai',active:true}};
+const CHANNELS=['Gọi điện','Zalo','Gặp trực tiếp','Email'];
+const RESULTS=['Quan tâm','Cần báo giá','Cần cân nhắc','Từ chối'];
+const NEEDS_NEXT=['Cần báo giá','Cần cân nhắc'];
+let custs=[
+ {id:'c1',name:'Công ty TNHH An Phát',contact:'Chị Hạnh',phone:'0901 111 001',owner:'lan',stage:'Đang chăm sóc'},
+ {id:'c2',name:'Cửa hàng Minh Châu',contact:'Anh Tuấn',phone:'0901 111 002',owner:'lan',stage:'Đang chăm sóc'},
+ {id:'c3',name:'Công ty CP Hải Long',contact:'Chị Ngọc',phone:'0901 111 003',owner:'lan',stage:'Đang chăm sóc'},
+ {id:'c4',name:'Xưởng in Thành Đạt',contact:'Anh Đạt',phone:'0901 111 004',owner:'lan',stage:'Đã ký'},
+ {id:'c5',name:'Công ty TNHH Việt Tiến',contact:'Anh Sơn',phone:'0901 111 005',owner:'hung',stage:'Đang chăm sóc'},
+ {id:'c6',name:'Nhà hàng Sen Vàng',contact:'Chị Lụa',phone:'0901 111 006',owner:'hung',stage:'Đang chăm sóc'},
+ {id:'c7',name:'Công ty CP Gia Huy',contact:'Anh Huy',phone:'0903 555 777',owner:'mai',stage:'Đã ký'}];
+let deals=[
+ {id:'d1',cust:'c1',name:'Gói CRM 10 user',stage:'Báo giá',owner:'lan'},
+ {id:'d2',cust:'c1',name:'Gói đào tạo nhân viên',stage:'Đã ký',owner:'lan'},
+ {id:'d3',cust:'c2',name:'Gói CRM 3 user',stage:'Liên hệ',owner:'lan'},
+ {id:'d4',cust:'c3',name:'Gói CRM 25 user',stage:'Đàm phán',owner:'lan'},
+ {id:'d5',cust:'c3',name:'Tích hợp Zalo OA',stage:'Liên hệ',owner:'lan'},
+ {id:'d6',cust:'c4',name:'Gói CRM 5 user',stage:'Đã ký',owner:'lan'},
+ {id:'d7',cust:'c5',name:'Gói CRM 15 user',stage:'Báo giá',owner:'hung'},
+ {id:'d8',cust:'c6',name:'Gói CRM 3 user',stage:'Liên hệ',owner:'hung'},
+ {id:'d9',cust:'c7',name:'Gói CRM 8 user',stage:'Đã ký',owner:'mai'},
+ {id:'d10',cust:'c7',name:'Gói đào tạo quản trị',stage:'Đã ký',owner:'mai'}];
+let logs=[
+ {id:'g1',cust:'c1',deal:'d1',t:T(1,0,15,20),by:'Lan',ch:'Gọi điện',rs:'Cần báo giá',note:'Khách hỏi giá cho 10 user, cần báo giá trước thứ Tư.',next:T(1,1,15,0)},
+ {id:'g2',cust:'c1',deal:'d2',t:T(0,3,10,0),by:'Lan',ch:'Gặp trực tiếp',rs:'Quan tâm',note:'Chốt gói đào tạo.',next:null},
+ {id:'g3',cust:'c3',deal:'d4',t:T(1,0,9,40),by:'Lan',ch:'Zalo',rs:'Cần cân nhắc',note:'Giám đốc muốn so sánh với nhà cung cấp khác.',next:T(1,1,15,30)},
+ {id:'g4',cust:'c3',deal:'d5',t:T(0,4,14,10),by:'Lan',ch:'Email',rs:'Quan tâm',note:'',next:null},
+ {id:'g5',cust:'c4',deal:'d6',t:T(0,2,11,0),by:'Lan',ch:'Gọi điện',rs:'Quan tâm',note:'Đã chốt lịch khảo sát với khách, hẹn CSKH hỗ trợ.',next:null},
+ {id:'g6',cust:'c5',deal:'d7',t:T(1,0,11,30),by:'Hùng',ch:'Gặp trực tiếp',rs:'Cần báo giá',note:'',next:T(1,1,14,45)},
+ {id:'g7',cust:'c7',deal:'d9',t:T(0,1,9,0),by:'Mai',ch:'Gọi điện',rs:'Quan tâm',note:'',next:null}];
+let tasks=[
+ {id:'t1',owner:'lan',cust:'c2',deal:'d3',text:'Gọi lại',due:T(1,0,10,0),status:'todo'},
+ {id:'t2',owner:'lan',cust:'c4',deal:'d6',text:'Gọi lại',due:T(1,1,9,0),status:'done',doneAt:T(1,1,9,5)},
+ {id:'t3',owner:'lan',cust:'c1',deal:'d1',text:'Gọi lại',due:T(1,1,11,0),status:'done',doneAt:T(1,1,11,2)},
+ {id:'t4',owner:'lan',cust:'c1',deal:'d1',text:'Gọi lại',due:T(1,1,15,0),status:'todo'},
+ {id:'t5',owner:'lan',cust:'c3',deal:'d4',text:'Gọi lại',due:T(1,1,15,30),status:'todo'},
+ {id:'t6',owner:'lan',cust:'c3',deal:'d5',text:'Gọi lại',due:T(1,1,16,0),status:'todo'},
+ {id:'t7',owner:'lan',cust:'c2',deal:'d3',text:'Gọi lại',due:T(1,2,9,0),status:'todo'},
+ {id:'t8',owner:'hung',cust:'c5',deal:'d7',text:'Gọi lại',due:T(1,1,14,45),status:'todo'},
+ {id:'t9',owner:'hung',cust:'c6',deal:'d8',text:'Gọi lại',due:T(1,1,16,30),status:'todo'}];
+let leads=[
+ {id:'l1',name:'Trần Quốc Bảo',co:'Cty Bảo Long',phone:'0912 000 101',src:'Facebook Ads',camp:'Khai trương T11',t:T(0,4,20,0),st:'Mới'},
+ {id:'l2',name:'Lê Thu Hà',co:'Spa Hà Anh',phone:'0912 000 102',src:'Google Ads',camp:'Từ khóa CRM',t:T(1,1,9,0),st:'Mới'},
+ {id:'l3',name:'Phạm Văn Nam',co:'Nội thất Nam Phát',phone:'0912 000 103',src:'Zalo OA',camp:'Giới thiệu',t:T(1,1,13,0),st:'Mới'},
+ {id:'l4',name:'Đỗ Minh Châu',co:'Gạch men Đại Việt',phone:'0912 000 104',src:'Webinar',camp:'Bán hàng với CRM',t:T(1,1,13,45),st:'Mới'},
+ {id:'l5',name:'Vũ Hoàng Yến',co:'Văn phòng phẩm Yến Linh',phone:'0912 000 105',src:'Hotline',camp:'Chưa xác định',t:T(1,1,14,20),st:'Mới'},
+ {id:'l6',name:'Nguyễn Anh Huy',co:'Cty CP Gia Huy',phone:'0903 555 777',src:'Facebook Ads',camp:'Khai trương T11',t:T(1,1,10,0),st:'Đã phân bổ',owner:'mai',at:T(1,1,10,0),old:true},
+ {id:'l7',name:'Hoàng Mai Lan',co:'Studio Lan Anh',phone:'0912 000 107',src:'Google Ads',camp:'Từ khóa CRM',t:T(1,0,14,0),st:'Đã phân bổ',owner:'lan',at:T(1,0,15,30)},
+ {id:'l8',name:'Bùi Đức Thịnh',co:'Cơ khí Thịnh Phát',phone:'0912 000 108',src:'Zalo OA',camp:'Giới thiệu',t:T(1,0,16,0),st:'Đã phân bổ',owner:'hung',at:T(1,1,8,30)}];
+/* Dữ liệu mẫu cho hồ sơ khách hàng thống nhất (T-27): giá trị deal, ngày ký, thanh toán, lịch sử đổi giai đoạn, thông tin hóa đơn */
+custs.forEach(c=>{c.createdAt=T(0,0,8,0);c.createdBy=ROLES[c.owner].short});
+const DEAL_X={
+ d1:{val:48000000,created:T(0,2,9,0)},
+ d2:{val:12000000,created:T(0,0,9,0),signedAt:T(0,3,10,0),pay:'Đã cọc',payHist:[{t:T(0,4,9,30),by:'Kế toán',to:'Đã cọc'}]},
+ d3:{val:15000000,created:T(0,4,9,0)},
+ d4:{val:110000000,created:T(0,3,11,0)},
+ d5:{val:20000000,created:T(0,4,14,0)},
+ d6:{val:25000000,created:T(0,0,10,0),signedAt:T(0,1,15,0),pay:'Đã tất toán',payHist:[{t:T(0,1,16,30),by:'Kế toán',to:'Đã cọc'},{t:T(1,0,9,20),by:'Kế toán',to:'Đã tất toán'}]},
+ d7:{val:70000000,created:T(0,1,9,0)},
+ d8:{val:15000000,created:T(0,4,10,0)},
+ d9:{val:38000000,created:T(0,0,13,0),signedAt:T(1,1,10,0),pay:'Chưa thanh toán',payHist:[]},
+ d10:{val:18000000,created:T(1,1,9,0),signedAt:T(1,1,14,0),pay:'Chưa thanh toán',payHist:[]}};
+deals.forEach(d=>Object.assign(d,DEAL_X[d.id]));
+let dealHist=[
+ {deal:'d1',from:'Liên hệ',to:'Báo giá',t:T(0,3,14,0),by:'Lan'},
+ {deal:'d2',from:'Liên hệ',to:'Đàm phán',t:T(0,1,10,0),by:'Lan'},
+ {deal:'d2',from:'Đàm phán',to:'Đã ký',t:T(0,3,10,0),by:'Lan'},
+ {deal:'d4',from:'Liên hệ',to:'Đàm phán',t:T(0,4,9,0),by:'Lan'},
+ {deal:'d6',from:'Liên hệ',to:'Đàm phán',t:T(0,0,14,0),by:'Lan'},
+ {deal:'d6',from:'Đàm phán',to:'Đã ký',t:T(0,1,15,0),by:'Lan'},
+ {deal:'d7',from:'Liên hệ',to:'Báo giá',t:T(1,0,11,45),by:'Hùng'},
+ {deal:'d9',from:'Báo giá',to:'Đàm phán',t:T(0,3,9,0),by:'Mai'},
+ {deal:'d9',from:'Đàm phán',to:'Đã ký',t:T(1,1,10,0),by:'Mai'},
+ {deal:'d10',from:'Đàm phán',to:'Đã ký',t:T(1,1,14,0),by:'Mai'}];
+/* Thông tin xuất hóa đơn (4 trường BR-05); trống = "Chưa có" */
+const INV={
+ c1:{legal:'Công ty TNHH An Phát',tax:'0101234567',addr:'25 Lê Văn Lương, Thanh Xuân, Hà Nội',email:'ketoan@anphat.example'},
+ c4:{legal:'Công ty TNHH In Thành Đạt',tax:'0109876543',addr:'Lô 7, KCN Quang Minh, Mê Linh, Hà Nội',email:'thanhdat@example.vn'},
+ c7:{legal:'Công ty Cổ phần Gia Huy',tax:'0312345678',addr:'',email:''}};
+/* Dữ liệu mẫu để thử "Xem thêm" (A-25): 40 lần chăm sóc bổ sung cho khách An Phát */
+for(let i=0;i<40;i++){const t=T(0,i%5,8+Math.floor(i/5),15);
+ logs.push({id:'gx'+i,cust:'c1',deal:(i%3===1&&t>T(0,0,9,0))?'d2':(i%3===0&&t>T(0,2,9,0))?'d1':null,t,by:'Lan',ch:CHANNELS[i%4],rs:'Quan tâm',note:'Trao đổi định kỳ (dữ liệu mẫu).',next:null})}
+let notifs=[];
+
+/* ===== M5 Bàn giao: dữ liệu mẫu (T-26) ===== */
+/* Địa chỉ trụ sở của khách (ACCOUNT.dia_chi_phap_ly); chuỗi rỗng nghĩa là hồ sơ chưa có (G2-04) */
+const HQ={c1:'25 Lê Văn Lương, Thanh Xuân, Hà Nội',c2:'',c3:'Tầng 5, 102 Thái Thịnh, Đống Đa, Hà Nội',c4:'Lô 7, KCN Quang Minh, Mê Linh, Hà Nội',c5:'',c6:'',c7:''};
+const SLA_MIN=240; /* SLA xác nhận Đã nhận = 4 giờ làm việc (A-16, BR-13, G2-15) */
+const HO_REASONS=['Thiếu thông tin','Sai địa chỉ','Không liên hệ được người tại chỗ','Khác'];
+/* state: wait = Chờ nhận bàn giao, back = Cần bổ sung (suy ra từ dòng trả lại mới nhất), recv = Đã nhận */
+let handoffs=[
+ {id:'h1',deal:'d6',cust:'c4',byKey:'lan',by:'Lan',sentAt:T(0,2,9,0),state:'recv',recvBy:'Kỹ thuật',recvAt:T(0,2,10,30),dstate:'Đang lắp đặt',addr:'Lô 7, KCN Quang Minh, Mê Linh, Hà Nội',contact:'Anh Đạt',phone:'0901111004',hours:'08:00-17:00',infra:'',returns:[]},
+ {id:'h2',deal:'d9',cust:'c7',byKey:'mai',by:'Mai',sentAt:T(1,1,11,0),state:'wait',recvBy:null,recvAt:null,dstate:'Chờ nhận bàn giao',addr:'88 Trần Duy Hưng, Cầu Giấy, Hà Nội',contact:'Anh Huy',phone:'0903555777',hours:'13:30-16:30',infra:'Cần xin phép ban quản lý tòa nhà trước 1 ngày.',returns:[]}];
+handoffs.forEach(f=>{f.due=addWork(f.sentAt,SLA_MIN);f.sendLog=[f.sentAt];f.dhist=[]});
+handoffs[0].dhist=[{t:T(0,2,13,0),by:'Kỹ thuật',to:'Đang khảo sát'},{t:T(0,3,9,0),by:'Kỹ thuật',to:'Đang lắp đặt'}];
+
+/* ===== T-31: dữ liệu mẫu bổ sung cho báo cáo (FR-12) và duyệt giảm giá (FR-13) - giả định, không phải dữ liệu thật ===== */
+const NGUONG=10; /* BR-03: giảm trên 10% cần Trưởng phòng KD duyệt (cấu hình) */
+const SRC0={d1:'Facebook Ads',d2:'Hotline',d3:'Google Ads',d4:'Zalo OA',d5:'Zalo OA',d6:'Facebook Ads',d7:'Webinar',d8:'Hotline',d9:'Facebook Ads',d10:'Facebook Ads'};
+deals.forEach(d=>{d.src=SRC0[d.id]});
+custs.forEach(c=>{const d=deals.find(x=>x.cust===c.id);c.src=d?d.src:'Chưa xác định'});
+deals.find(d=>d.id==='d2').lead='l14';deals.find(d=>d.id==='d6').lead='l10';deals.find(d=>d.id==='d1').lead='l9';deals.find(d=>d.id==='d4').lead='l11';deals.find(d=>d.id==='d7').lead='l16';
+deals.push(
+ {id:'d11',cust:'c5',name:'Gói bảo trì năm',stage:'Đã ký',owner:'hung',val:30000000,created:T(0,0,9,30),signedAt:T(0,0,10,0),pay:'Chưa thanh toán',payHist:[],src:'Hotline',lead:'l15'},
+ {id:'d12',cust:'c6',name:'Gói CRM 10 user',stage:'Thua',owner:'hung',val:40000000,created:T(0,0,11,0),lostAt:T(0,3,16,0),lostReason:'Giá cao',src:'Zalo OA'},
+ {id:'d13',cust:'c2',name:'Gói CRM 5 user',stage:'Thua',owner:'lan',created:T(0,2,9,30),lostAt:T(0,4,10,0),lostReason:'Chọn nhà cung cấp khác',src:'Google Ads',lead:'l13'},
+ {id:'d14',cust:'c3',name:'Gói báo cáo nâng cao',stage:'Thua',owner:'lan',val:25000000,created:T(0,1,10,0),lostAt:T(1,0,9,30),lostReason:'Khác',lostNote:'Khách hoãn dự án sang quý sau.',src:'Facebook Ads',lead:'l17'});
+dealHist.push(
+ {deal:'d11',from:'Đàm phán',to:'Đã ký',t:T(0,0,10,0),by:'Hùng'},
+ {deal:'d12',from:'Đàm phán',to:'Thua',t:T(0,3,16,0),by:'Hùng'},
+ {deal:'d13',from:'Báo giá',to:'Thua',t:T(0,4,10,0),by:'Lan'},
+ {deal:'d14',from:'Đàm phán',to:'Thua',t:T(1,0,9,30),by:'Lan'});
+(function(){const mk=(id,name,co,src,camp,t,owner,st,dl)=>leads.push({id,name,co,phone:'0912 000 '+(100+Number(id.slice(1))),src,camp,t,st,owner,at:owner?t+30:undefined,deal:dl});
+ mk('l9','Ngô Thanh Tùng','Cty Tùng Lâm','Facebook Ads','Khai trương T11',T(0,2,8,30),'lan','Đã chuyển deal','d1');
+ mk('l10','Phan Bích Ngọc','Spa Ngọc Lan','Facebook Ads','Khai trương T11',T(0,0,8,30),'lan','Đã chuyển deal','d6');
+ mk('l11','Đinh Quang Vinh','Gạch Vinh Phát','Zalo OA','Giới thiệu',T(0,2,9,0),'lan','Đã chuyển deal','d4');
+ mk('l12','Lương Thị Hoa','Tạp hóa Hoa Mai','Zalo OA','Giới thiệu',T(0,1,13,0),'hung','Không đạt');
+ mk('l13','Kiều Văn Long','Cơ khí Long Hải','Google Ads','Từ khóa CRM',T(0,1,9,0),'lan','Đã chuyển deal','d13');
+ mk('l14','Tạ Thu Trang','Xưởng in Thu Trang','Hotline','Chưa xác định',T(0,0,8,0),'lan','Đã chuyển deal','d2');
+ mk('l15','Hồ Minh Khoa','Nhà hàng Minh Khoa','Hotline','Chưa xác định',T(0,0,8,40),'hung','Đã chuyển deal','d11');
+ mk('l16','Mai Văn Phúc','Nội thất Phúc An','Webinar','Bán hàng với CRM',T(0,1,8,0),'hung','Đã chuyển deal','d7');
+ mk('l17','Trịnh Đức Anh','Cty Đức Anh','Facebook Ads','Khai trương T11',T(0,1,8,0),'lan','Đã chuyển deal','d14');
+ mk('l18','Vương Hải Yến','Cửa hàng Hải Yến','Facebook Ads','Khai trương T11',T(0,3,9,0),'hung','Không đạt')})();
+/* Đề nghị giảm giá (DISCOUNT_APPROVAL). st = kết quả; chỉ có hiệu lực khi at <= giờ demo (hàm dcSt) */
+deals.forEach(d=>{if(d.stage==='Đã ký')d.disc=0}); /* mức giảm áp dụng (DEAL.ty_le_giam_ap_dung) của deal đã ký mẫu */
+let discounts=[
+ {id:'dc1',deal:'d4',pct:12,by:'lan',t:T(0,4,10,0),note:'Khách so sánh với nhà cung cấp khác, xin giảm thêm.',st:'tu_choi',who:'tp',at:T(0,4,15,0),anote:'Giảm tối đa 10% cho gói 25 user.'},
+ {id:'dc2',deal:'d4',pct:11,by:'lan',t:T(1,0,9,0),note:'Khách chốt nếu giảm 11%.',st:'da_duyet',who:'tp',at:T(1,0,11,30),anote:''},
+ {id:'dc3',deal:'d7',pct:15,by:'hung',t:T(1,0,16,0),note:'Khách mua 15 user, xin giảm theo số lượng.',st:'cho_duyet',who:null,at:null,anote:''},
+ {id:'dc4',deal:'d1',pct:12,by:'lan',t:T(1,1,11,0),note:'Khách đặt cọc ngay nếu được giảm 12%.',st:'cho_duyet',who:null,at:null,anote:''}];
+
+
+/* ===== State ===== */
+const S={role:'lan',page:'today',tab:'queue',sel:new Set(),now:PRESETS[0][1],drawer:null,drawerDeal:'',hoTab:'wait',tlN:20,notif:false,assignTo:'',redist:{from:'lan',to:'hung',sel:new Set(),sum:null}};
+const R=()=>ROLES[S.role], K=()=>R().kind;
+const cust=id=>custs.find(c=>c.id===id), deal=id=>deals.find(d=>d.id===id);
+const openDeals=cid=>deals.filter(d=>d.cust===cid&&d.stage!=='Đã ký'&&d.stage!=='Thua');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===== Quy tắc / quyền ===== */
+const canSeeCust=c=>{const k=K();return k==='nv'?c.owner===S.role:k==='kt'?handoffs.some(f=>f.cust===c.id&&f.sentAt<=S.now):k==='ktoan'?deals.some(d=>d.cust===c.id&&d.stage==='Đã ký'):k==='mkt'?false:true}; /* US-M1-03, G2-14: Kỹ thuật chỉ thấy khách đã có form; Kế toán chỉ khách đã ký; Marketing không xem hồ sơ khách */
+const canLog=c=>K()==='tp'||(K()==='nv'&&c.owner===S.role)||(K()==='cskh'&&c.stage==='Đã ký');
+const canSend=c=>K()==='tp'||(K()==='nv'&&c.owner===S.role); /* G2-03 */
+const formOf=did=>handoffs.find(f=>f.deal===did&&f.sentAt<=S.now);
+const hoOver=f=>f.state==='wait'&&f.sentAt<=S.now&&S.now>=f.due; /* quá hạn là giá trị suy ra (G2-16) */
+const visHo=()=>{const k=K();if(k==='cskh'||k==='ktoan'||k==='mkt')return [];return handoffs.filter(f=>f.sentAt<=S.now&&(k!=='nv'||f.byKey===S.role))};
+const hoCount=()=>{const v=visHo();return{wait:v.filter(f=>f.state==='wait').length,over:v.filter(hoOver).length}};
+const leadDue=l=>addWork(l.t,120);
+const leadOver=l=>l.st==='Mới'&&l.t<=S.now&&S.now>=leadDue(l);
+const queue=()=>leads.filter(l=>l.st==='Mới'&&l.t<=S.now).sort((a,b)=>a.t-b.t);
+const myTasks=()=>tasks.filter(t=>t.owner===S.role);
+const overdueTasks=()=>myTasks().filter(t=>t.status==='todo'&&t.due<S.now).sort((a,b)=>a.due-b.due);
+const todayTasks=()=>myTasks().filter(t=>t.status==='todo'&&t.due>=S.now&&dayIdx(t.due)===dayIdx(S.now)).sort((a,b)=>a.due-b.due);
+const doneTasks=()=>myTasks().filter(t=>t.status==='done'&&t.doneAt<=S.now&&dayIdx(t.doneAt)===dayIdx(S.now));
+
+/* ===== Tiện ích UI ===== */
+const ICON={
+ today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>',
+ lead:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>',
+ cust:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7M17 11a3 3 0 100-6M22 21c0-3-2-5-4-6"/></svg>',
+ ho:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM9 12h6M9 16h4"/></svg>',
+ gen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>'};
+let toastT;
+function toast(msg,err){const b=document.getElementById('toastbox');b.innerHTML='<div class="toast'+(err?' err':'')+'">'+msg+'</div>';clearTimeout(toastT);toastT=setTimeout(()=>b.innerHTML='',4200)}
+let nid=0;
+function notify(to,text,link){notifs.unshift({id:++nid,to,text,link:link||null,read:false,t:S.now})}
+function myNotifs(){const a=[];if(K()==='tp'){const n=queue().filter(leadOver).length;if(n)a.push({text:'Có '+n+' lead quá hạn phân bổ (hạn 2 giờ làm việc).',sub:'Hàng chờ lead',link:{page:'lead',tab:'queue'}})}
+ if(K()==='nv'||K()==='tp'||K()==='cskh'){const n=overdueTasks().length;if(n)a.push({text:'Bạn có '+n+' việc quá hạn.',sub:'Màn hình Hôm nay',link:{page:'today'}})}
+ if(K()!=='cskh'&&K()!=='gd'){const c=hoCount();
+  if(K()==='kt'&&c.wait)a.push({text:'Có '+c.wait+' bàn giao chờ nhận.',sub:'Bàn giao',link:{page:'ho'}});
+  if(K()!=='kt'&&c.over)a.push({text:'Có '+c.over+' bàn giao quá hạn xác nhận (hạn 4 giờ làm việc).',sub:'Bàn giao',link:{page:'ho'}})}
+ notifs.filter(x=>x.to===S.role).forEach(x=>a.push({text:x.text,sub:'Thông báo trong ứng dụng · '+fmt(x.t),link:x.link,nid:x.id,read:x.read}));return a}
+
+/* ===== Render ===== */
+function render(){
+ if(!navOk(S.page))S.page=(NAVS[K()]||['cust'])[0];
+ const k=K(), od=overdueTasks().length, need=od+todayTasks().length, qOver=queue().filter(leadOver).length, qn=queue().length, hc=hoCount(), hoBadge=hc.over?hc.over:(k==='kt'&&hc.wait?hc.wait:'');
+ const nav=(id,label,icon,badge,red)=>!navOk(id)?'':`<button class="nav ${S.page===id?'on':''}" data-act="page" data-p="${id}">${icon}<span>${label}</span>${badge?`<span class="bd ${red?'red':''}">${badge}</span>`:''}</button>`;
+ const dis=(label)=>`<button class="nav dis" title="Ngoài phạm vi T-21/T-22 (xem prototype M1)">${ICON.gen}<span>${label}</span></button>`;
+ const ns=myNotifs();
+ let body='';
+ if(S.page==='today')body=viewToday();else if(S.page==='lead')body=viewLead();else if(S.page==='ho')body=viewHo();else if(S.page==='rp')body=viewRp();else if(S.page==='dc')body=viewDc();else body=viewCusts();
+ const title={today:'Hôm nay',lead:'Lead',ho:'Bàn giao',cust:'Khách hàng',rp:'Báo cáo',dc:'Duyệt giảm giá'}[S.page];
+ const dsc=document.querySelector('.drawer .db'),dst=dsc?dsc.scrollTop:0;
+ document.getElementById('app').innerHTML=`
+ <aside class="side"><div class="logo"><i></i>LinkFlow CRM</div>
+  ${dis('Tổng quan')}${nav('cust','Khách hàng',ICON.cust)}${dis('Pipeline')}
+  ${nav('today','Hôm nay',ICON.today,od?od:(need||''),od>0)}
+  ${nav('lead','Lead',ICON.lead,(k==='tp'||k==='gd')?(qOver?qOver:(qn||'')):'',qOver>0&&(k==='tp'||k==='gd'))}
+  ${nav('ho','Bàn giao',ICON.ho,hoBadge,hc.over>0)}
+  ${(k==='tp'||k==='gd')?nav('dc','Duyệt giảm giá',ICON.gen,dcWait().filter(x=>x.by!==S.role).length||'',false):''}
+  ${nav('rp','Báo cáo',ICON.gen)}
+  <div class="sidefoot">Prototype T-21, T-22, T-26, T-27, T-31, T-35, G-01<br>Dữ liệu mẫu, không phải dữ liệu thật.<br>Mục mờ: chưa làm trong prototype này.</div></aside>
+ <div class="main"><div class="top"><h1>${title}</h1><div class="sp"></div>
+  <div class="ctl">Giờ demo <select data-chg="clock">${PRESETS.some(p=>p[1]===S.now)?'':'<option value="" disabled selected>Giờ tùy chọn</option>'}${PRESETS.map(p=>`<option value="${p[1]}" ${p[1]===S.now?'selected':''}>${p[0]}</option>`).join('')}</select> hoặc <select data-chg="clkDay" id="clkDay">${Array.from({length:14},(_,i)=>`<option value="${i}" ${i===dayIdx(S.now)?'selected':''}>${fmtDay(i)}</option>`).join('')}</select><input type="time" id="clkTime" data-chg="clkTime" value="${hhmm(S.now)}"></div>
+  <div class="ctl">Vai trò <select data-chg="role">${Object.keys(ROLES).map(r=>`<option value="${r}" ${r===S.role?'selected':''}>${ROLES[r].label}</option>`).join('')}</select></div>
+  <button class="bell" data-act="bell" title="Thông báo">🔔${ns.filter(n=>!n.read).length?`<b>${ns.filter(n=>!n.read).length}</b>`:''}</button></div>
+  ${S.notif?`<div class="np"><h4>Thông báo của ${esc(R().short)}</h4>${ns.length?ns.map((n,i)=>`<div class="it ${n.link?'lk':''} ${n.read?'rd':''}" data-act="openNotif" data-i="${i}">${n.read?'':'<span class="dot"></span>'}${n.text}<small>${n.sub}</small></div>`).join(''):'<div class="it"><small>Không có thông báo</small></div>'}</div>`:''}
+  <div class="content">${body}</div></div>
+ ${S.drawer?drawerHtml():''}`;
+ const ndb=document.querySelector('.drawer .db');if(ndb)ndb.scrollTop=dst;
+}
+
+/* ===== M4: Hôm nay ===== */
+function taskRow(t,over){
+ const c=cust(t.cust),d=t.deal?deal(t.deal):null;
+ return `<div class="row click ${over?'od':''}" data-act="openCust" data-id="${c.id}">
+  <div class="tm">${over?fmt(t.due):hhmm(t.due)}</div>
+  <div class="grow"><b>${esc(c.name)}</b><small>${esc(t.text)}${d?' · '+esc(d.name):''}</small>${over?`<div class="late">Trễ ${dur(S.now-t.due)}</div>`:''}</div>
+  <div class="acts"><button class="btn sm" data-act="done" data-id="${t.id}">Xong</button><button class="btn sm pri" data-act="doneLog" data-id="${t.id}">Xong và ghi nhanh</button><button class="btn sm" data-act="resched" data-id="${t.id}">Dời hạn</button></div></div>`}
+function viewToday(){
+ const k=K(),ov=overdueTasks(),td=todayTasks(),dn=doneTasks();
+ if(k==='gd')return `<div class="banner info">Giám đốc chỉ xem báo cáo, không có việc cá nhân trên màn hình Hôm nay.</div>${emptyToday()}`;
+ const need=ov.length+td.length;
+ return `<div class="cards">
+  <div class="card"><small>Việc cần làm</small><b>${need}</b></div>
+  <div class="card ${ov.length?'red':''}"><small>Quá hạn</small><b>${ov.length}</b></div>
+  <div class="card"><small>Đã xong hôm nay</small><b>${dn.length}</b></div>
+  <div class="card" style="display:flex;align-items:center;justify-content:center"><button class="btn pri" data-act="newLog">+ Ghi nhanh</button></div></div>
+ ${need===0?emptyToday():''}
+ ${ov.length?`<div class="sec"><h3 class="red">Quá hạn (${ov.length})</h3>${ov.map(t=>taskRow(t,true)).join('')}</div>`:''}
+ ${td.length?`<div class="sec"><h3>Hôm nay · ${DAYS[dow(S.now)]} (${td.length})</h3>${td.map(t=>taskRow(t,false)).join('')}</div>`:''}
+ ${dn.length?`<div class="sec"><h3>Đã xong hôm nay (${dn.length})</h3>${dn.map(t=>`<div class="row"><div class="tm" style="color:var(--grn)">${hhmm(t.doneAt)}</div><div class="grow"><b>${esc(cust(t.cust).name)}</b><small>${esc(t.text)}</small></div><span class="tag grn">Đã xong</span></div>`).join('')}</div>`:''}
+ <div class="legend">Mỗi người chỉ thấy việc của mình. Quá hạn là việc chưa làm có hạn trước giờ demo (trạng thái suy ra, không lưu thành cột). Cảnh báo là thông báo trong ứng dụng, không gửi Zalo hay email.</div>`}
+function emptyToday(){return `<div class="sec"><div class="empty">Hôm nay không có việc</div></div>`}
+
+/* ===== Hồ sơ khách (drawer) ===== */
+function viewCusts(){
+ const list=custs.filter(canSeeCust);
+ return `${K()==='nv'?'<div class="banner info">Nhân viên KD chỉ thấy khách mình phụ trách.</div>':''}${K()==='kt'?'<div class="banner info">Kỹ thuật chỉ thấy khách đã được gửi form bàn giao.</div>':''}${K()==='ktoan'?'<div class="banner info">Kế toán chỉ thấy khách đã ký.</div>':''}${K()==='mkt'?'<div class="banner warn">Marketing không có quyền xem hồ sơ khách (chỉ nhập lead).</div>':''}
+ ${(K()==='tp'||K()==='nv')?`<div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px">${K()==='tp'?'<button class="btn" data-act="imOpen">Nhập khách từ Google Sheet</button>':''}<button class="btn pri" data-act="cfOpen">+ Tạo khách</button></div>`:''}
+ <div class="sec"><table><tr><th>Khách hàng</th><th>Phụ trách</th><th>Giai đoạn</th><th>Deal mở</th><th></th></tr>
+ ${list.map(c=>`<tr><td><b>${esc(c.name)}</b><br><small style="color:var(--mut)">${esc(c.contact)} · ${esc(c.phone)}</small></td><td>${esc(ownerName(c))}</td><td><span class="tag ${c.stage==='Đã ký'?'grn':'blu'}">${c.stage}</span></td><td>${openDeals(c.id).length}</td><td style="text-align:right"><button class="btn sm" data-act="openCust" data-id="${c.id}">Mở hồ sơ</button></td></tr>`).join('')||'<tr><td colspan=5><div class="empty">Chưa có khách</div></td></tr>'}</table></div>`}
+/* ===== Hồ sơ khách hàng thống nhất + dòng thời gian (T-27; FR-09, US-M5-10..12, BR-19, A-24..A-26) ===== */
+const vnd=n=>n.toLocaleString('vi-VN')+' ₫';
+/* Phần hồ sơ mỗi vai trò được xem (A-26, BR-19). Kế toán, Kỹ thuật không thấy nội dung chăm sóc; Kỹ thuật không thấy giá trị deal, thanh toán, hóa đơn */
+const SEE=sec=>{const k=K();return({value:k!=='kt',pay:k!=='kt',inv:k!=='kt',care:k!=='kt'&&k!=='ktoan',hand:k!=='ktoan'&&k!=='mkt',disc:k==='nv'||k==='tp'||k==='gd'})[sec]};
+const EV_TYPES=()=>{const k=K();return k==='kt'?['handoff','delivery']:k==='ktoan'?['create','stage','pay','handoff','delivery','invoice']:null};
+const EV_TAG={create:'',care:'blu',stage:'amb',pay:'grn',handoff:'',delivery:'blu',invoice:'blu'};
+const PAY_TAG={'Chưa thanh toán':'amb','Đã cọc':'blu','Đã tất toán':'grn'};
+/* Dòng thời gian dựng từ dữ liệu có sẵn, không nhập thêm (NFR-02); chỉ thêm dòng, không sửa, không xóa */
+function evsOf(cid){
+ const c=cust(cid),out=[];
+ out.push({t:c.createdAt,by:c.createdBy,type:'create',label:'Tạo hồ sơ',text:'Hồ sơ khách được tạo.',deal:null});
+ logs.filter(l=>l.cust===cid).forEach(l=>out.push({t:l.t,by:l.by,type:'care',label:'Chăm sóc',text:l.ch+' · '+l.rs+(l.note?' · '+l.note:'')+(l.next?' · Hẹn lần sau '+fmt(l.next):''),deal:l.deal}));
+ dealHist.filter(h=>deal(h.deal).cust===cid).forEach(h=>out.push({t:h.t,by:h.by,type:'stage',label:'Đổi giai đoạn deal',text:h.from+' → '+h.to,deal:h.deal}));
+ deals.filter(d=>d.cust===cid).forEach(d=>(d.payHist||[]).forEach(p=>out.push({t:p.t,by:p.by,type:'pay',label:'Thanh toán',text:'Xác nhận '+p.to,deal:d.id})));
+ handoffs.filter(f=>f.cust===cid).forEach(f=>{
+  f.sendLog.forEach((t,i)=>out.push({t,by:f.by,type:'handoff',label:i?'Gửi lại bàn giao':'Gửi bàn giao',text:'Form bàn giao gửi sang Kỹ thuật',deal:f.deal}));
+  f.returns.forEach(r=>out.push({t:r.at,by:r.by,type:'handoff',label:'Trả lại bàn giao',text:r.reason+(r.note?': '+r.note:''),deal:f.deal}));
+  if(f.recvAt)out.push({t:f.recvAt,by:f.recvBy,type:'handoff',label:'Nhận bàn giao',text:'Kỹ thuật xác nhận Đã nhận',deal:f.deal});
+  f.dhist.forEach(x=>out.push({t:x.t,by:x.by,type:'delivery',label:'Đổi trạng thái triển khai',text:'→ '+x.to+(x.day!=null?' · ngày nghiệm thu '+fmtDay(x.day):'')+(x.note?' · '+x.note:''),deal:f.deal}))});
+ invHist.filter(x=>x.cust===cid).forEach(x=>out.push({t:x.t,by:x.by,type:'invoice',label:x.label,text:x.text,deal:null}));
+ return out.filter(e=>e.t<=S.now)}
+const stl=(label,html)=>`<div class="st"><span>${label}</span><div>${html}</div></div>`;
+function delTag(f){
+ if(!f)return '<span class="tag">Chưa bàn giao</span>';
+ if(f.state==='recv')return `<span class="tag ${f.dstate==='Đã nghiệm thu'?'grn':'blu'}">${esc(f.dstate)}</span>`;
+ if(f.state==='back')return '<span class="tag amb">Chờ nhận bàn giao</span><span class="tag red">Cần bổ sung</span>';
+ return hoOver(f)?'<span class="tag amb">Chờ nhận bàn giao</span><span class="tag red">Quá hạn xác nhận</span>':'<span class="tag amb">Chờ nhận bàn giao</span>'}
+function dealBlock(d,c){
+ const signed=d.stage==='Đã ký',f=signed?formOf(d.id):null,ld=d.lead?leads.find(l=>l.id===d.lead):null;
+ let btn='';
+ if(f)btn=`<button class="btn sm" data-act="viewHo" data-id="${f.id}">Xem form</button>`;
+ else if(canSend(c)&&d.stage!=='Thua')btn=`<button class="btn sm ${signed?'pri':'soft'}" data-act="startHo" data-deal="${d.id}">Bàn giao</button>`;
+ const hd=f&&SEE('hand')?`<div class="kv2" style="margin:10px 0 0;padding-top:10px;border-top:1px dashed var(--line)"><span>Địa chỉ lắp đặt</span><b style="grid-column:span 3">${esc(f.addr)}</b><span>Liên hệ tại chỗ</span><b>${esc(f.contact)}</b><span>Điện thoại</span><b>${esc(fmtPhone(f.phone))}</b><span>Khung giờ tiếp cận</span><b>${esc(f.hours.replace('-',' - '))}</b>${f.infra?`<span>Lưu ý hạ tầng</span><b style="grid-column:span 3">${esc(f.infra)}</b>`:''}</div>`:'';
+ return `<div class="dealblk"><div class="dh2"><b style="flex:1">${esc(d.name)}</b>${d.owner!==c.owner?`<span class="tag">giữ ${esc(ROLES[d.owner].short)}</span>`:''}${canStage(d)?`<button class="btn sm" data-act="stageOpen" data-deal="${d.id}">Đổi giai đoạn</button>`:''}</div>
+ ${SEE('value')?`<div class="kv2"><span>Giá trị</span><b>${d.val==null?'Chưa có':vnd(d.val)}</b><span>Ngày ký</span><b>${signed?fmt(d.signedAt):'Chưa ký'}</b>${signed&&SEE('disc')?`<span>Giảm giá áp dụng</span><b>${d.disc==null?'Chưa ghi':m1(d.disc)+'%'}</b>`:''}<span>Nguồn</span><b>${esc(d.src||'Chưa xác định')}</b><span>Chiến dịch</span><b>${ld?esc(ld.camp):'<span style="color:var(--mut);font-weight:400">Không có (deal tạo trực tiếp)</span>'}</b></div>`:''}
+ <div class="sts">
+  ${SEE('value')?stl('Thương mại',`<span class="tag ${signed?'grn':d.stage==='Thua'?'red':'amb'}">${d.stage}</span>${SEE('disc')&&dcPend(d.id)?'<span class="tag amb">Chờ duyệt giảm giá</span>':''}`):''}
+  ${SEE('pay')?stl('Thanh toán',(signed?`<span class="tag ${PAY_TAG[d.pay]}">${d.pay}</span>`:'<span class="tag">Chưa áp dụng</span>')+(K()==='ktoan'&&signed&&d.pay!=='Đã tất toán'?`<button class="btn sm pri" data-act="payOpen" data-deal="${d.id}">Xác nhận thanh toán</button>`:'')):''}
+  ${stl('Triển khai',(signed?delTag(f):'<span class="tag">Chưa áp dụng</span>')+(f&&f.state==='recv'&&f.dhist.length?`<small style="color:var(--mut)">${esc(f.dhist[f.dhist.length-1].by)} cập nhật ${fmt(f.dhist[f.dhist.length-1].t)}${f.acceptDay!=null?' · Ngày nghiệm thu '+fmtDay(f.acceptDay):''}</small>`:'')+btn+(K()==='kt'&&f&&f.state==='recv'&&f.dstate!=='Đã nghiệm thu'?`<button class="btn sm pri" data-act="delOpen" data-id="${f.id}">Cập nhật triển khai</button>`:''))}
+ </div>${hd}${SEE('disc')?dcBlock(d,c):''}</div>`}
+function drawerHtml(){
+ const c=cust(S.drawer);if(!c)return '';
+ const k=K(),can=canLog(c),types=EV_TYPES();
+ const ds=deals.filter(d=>d.cust===c.id).sort((a,b)=>b.created-a.created);
+ const base=evsOf(c.id).filter(e=>!types||types.includes(e.type));
+ const all=base.filter(e=>!S.drawerDeal||e.deal===S.drawerDeal||e.deal===null).sort((a,b)=>b.t-a.t);
+ const shown=all.slice(0,S.tlN),inv=INV[c.id]||{};
+ const iv=(label,v)=>`<span>${label}</span><b>${v?esc(v):'<span style="color:var(--mut);font-weight:400">Chưa có</span>'}</b>`;
+ return `<div class="ov" style="background:rgba(15,23,42,.25);justify-content:flex-end;padding:0;z-index:39" data-act="closeDrawer"></div>
+ <div class="drawer"><div class="dh"><div style="flex:1"><b style="font-size:16px">${esc(c.name)}</b><div style="color:var(--mut);font-size:13px;margin-top:2px">Liên hệ chính: ${esc(c.contact)} · ${esc(c.phone)} · Phụ trách: ${esc(ownerName(c))}${c.src?' · Nguồn: '+esc(c.src):''}</div></div>${SEE('value')?`<span class="tag ${c.stage==='Đã ký'?'grn':'blu'}">${c.stage}</span>`:''}<button class="btn sm" data-act="closeDrawer">Đóng</button></div>
+ <div class="db"><div class="sech" style="margin-top:0">Deal (${ds.length})</div>
+ ${ds.length?ds.map(d=>dealBlock(d,c)).join(''):'<div class="note">Chưa có deal</div>'}
+ ${SEE('inv')?`<div class="sech" style="display:flex;align-items:center;gap:8px"><span style="flex:1">Thông tin xuất hóa đơn</span>${invSent[c.id]?'<span class="tag grn">Đã chuyển Kế toán</span>':''}${canInv(c)?`<button class="btn sm" data-act="invOpen" data-id="${c.id}">Sửa</button>${invSent[c.id]?'':`<button class="btn sm pri" data-act="invSend" data-id="${c.id}" ${hasSigned(c.id)?'':'disabled title="Chỉ chuyển Kế toán khi khách có deal Đã ký"'}>Chuyển Kế toán</button>`}`:''}</div><div class="kv2" style="grid-template-columns:130px 1fr 130px 1fr">${iv('Tên pháp lý',inv.legal)}${iv('Mã số thuế',inv.tax)}${iv('Địa chỉ trụ sở',inv.addr)}${iv('Email nhận hóa đơn',inv.email)}</div><div class="note" style="margin-top:-2px">${invSent[c.id]?'Đã chuyển Kế toán bởi '+esc(invSent[c.id].by)+' lúc '+fmt(invSent[c.id].t)+'. Từ đây bốn trường không được để trống; mọi thay đổi gửi thông báo cho Kế toán.':canInv(c)?(hasSigned(c.id)?'Cần đủ bốn trường để chuyển Kế toán.':'Chỉ chuyển Kế toán khi khách có deal “Đã ký”.'):'Chỉ xem. Nhân viên KD phụ trách khách và Trưởng phòng KD mới sửa được.'}</div>`:''}
+ <div style="display:flex;align-items:center;gap:8px;margin:16px 0 10px"><b style="font-size:13px;flex:1">Dòng thời gian (${all.length})</b>
+  ${ds.length>=2?`<select data-chg="drawerDeal" style="border:1px solid var(--line);border-radius:8px;padding:5px 8px"><option value="">Tất cả deal</option>${ds.map(d=>`<option value="${d.id}" ${S.drawerDeal===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select>`:''}
+  ${can&&SEE('care')?`<button class="btn sm pri" data-act="logCust" data-id="${c.id}">Ghi nhanh</button>`:''}</div>
+ ${!SEE('care')?`<div class="note" style="margin:-4px 0 10px">${k==='kt'?'Kỹ thuật':'Kế toán'} không xem nội dung chăm sóc khách (A-26); dòng thời gian chỉ gồm các sự kiện thuộc phần bạn được xem.</div>`:''}
+ ${!can&&k==='cskh'?'<div class="note" style="margin:-4px 0 10px">CSKH chỉ ghi nhanh khi khách đã ở “Đã ký”.</div>':''}
+ ${!can&&k==='gd'?'<div class="note" style="margin:-4px 0 10px">Giám đốc chỉ xem.</div>':''}
+ ${shown.map(e=>`<div class="log"><div class="lt"><b>${fmt(e.t)}</b><span class="tag ${EV_TAG[e.type]}">${e.label}</span><small>${esc(e.by)}</small></div><div>${esc(e.text)}</div>${e.deal?`<small>Deal: ${esc(deal(e.deal).name)}</small>`:''}</div>`).join('')||'<div class="empty">Chưa có sự kiện</div>'}
+ ${all.length>shown.length?`<button class="btn" style="width:100%" data-act="tlMore">Xem thêm (còn ${all.length-shown.length} sự kiện)</button>`:''}
+ ${SEE('care')&&!base.some(e=>e.type==='care')?'<div class="note">Chưa có lịch sử chăm sóc</div>':''}
+ </div></div>`}
+
+/* ===== M4: Ghi nhanh (modal) ===== */
+let QL=null,qlTimer=null;
+function openQL(o){
+ const c=o.cust?cust(o.cust):null;
+ QL={cust:o.cust||'',deal:o.deal||'',ch:'',rs:'',day:'',time:'10:00',note:'',t0:performance.now(),task:o.task||null};
+ if(c&&!o.deal){const od=openDeals(c.id);if(od.length===1)QL.deal=od[0].id}
+ const allowed=custs.filter(x=>canLog(x));
+ const m=document.getElementById('modal');
+ m.innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Ghi nhanh kết quả trao đổi</b><span class="timer" id="qlT">0 giây</span><button class="x" data-act="closeModal">×</button></div>
+ <div class="mb"><div id="qlCust"></div>
+ <div class="fld"><label>Kênh <i>*</i></label><div class="chips">${CHANNELS.map(v=>`<button class="chip" data-act="qlPick" data-k="ch" data-v="${v}">${v}</button>`).join('')}</div></div>
+ <div class="fld"><label>Kết quả <i>*</i></label><div class="chips">${RESULTS.map(v=>`<button class="chip" data-act="qlPick" data-k="rs" data-v="${v}">${v}</button>`).join('')}</div></div>
+ <div class="fld"><label>Hẹn lần sau <span id="qlReq" style="color:var(--red)"></span></label><div class="two"><select id="qlDay" data-chg="qlDay"><option value="">Không đặt hẹn</option>${[0,1,2].map(i=>`<option value="${i}">${['Hôm nay','Ngày mai','Ngày kia'][i]} · ${DAYS[dow(S.now+i*D)]}</option>`).join('')}</select><input type="time" id="qlTime" value="10:00" data-chg="qlTime"></div></div>
+ <div class="fld"><label>Ghi chú (không bắt buộc)</label><textarea id="qlNote" maxlength="500" data-chg="qlNote"></textarea><div class="note" id="qlCnt">0/500</div></div>
+ <div class="err" id="qlErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="saveQL">Lưu</button></div></div></div>`;
+ window._allowed=allowed;syncQL();
+ clearInterval(qlTimer);qlTimer=setInterval(()=>{const s=Math.round((performance.now()-QL.t0)/1000),e=document.getElementById('qlT');if(e){e.textContent=s+' giây';e.className='timer '+(s>30?'bad':'')}},500);
+}
+function qlCustHtml(){
+ const c=QL.cust?cust(QL.cust):null;
+ let h='';
+ if(!QL.fixedCust&&!QL.locked){h+=`<div class="fld"><label>Khách hàng <i>*</i></label><select data-chg="qlCust"><option value="">Chọn khách…</option>${window._allowed.map(x=>`<option value="${x.id}" ${x.id===QL.cust?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>`}
+ else if(c)h+=`<div class="fld"><label>Khách hàng</label><div class="fixed"><b>${esc(c.name)}</b></div></div>`;
+ if(c){const od=openDeals(c.id);
+  if(od.length===1)h+=`<div class="fld"><label>Deal</label><div class="fixed">Tự gắn vào: <b>${esc(od[0].name)}</b></div></div>`;
+  else if(od.length>=2)h+=`<div class="fld"><label>Deal</label><select data-chg="qlDeal"><option value="">Ghi chung cho khách (không gắn deal)</option>${od.map(d=>`<option value="${d.id}" ${d.id===QL.deal?'selected':''}>${esc(d.name)}</option>`).join('')}</select></div>`;
+  else h+=`<div class="fld"><label>Deal</label><div class="fixed">Khách chưa có deal mở, ghi chung cho khách.</div></div>`}
+ return h}
+function syncQL(){
+ if(!QL)return;
+ document.getElementById('qlCust').innerHTML=qlCustHtml();
+ document.querySelectorAll('#modal .chip').forEach(b=>b.classList.toggle('on',QL[b.dataset.k]===b.dataset.v));
+ document.getElementById('qlReq').textContent=NEEDS_NEXT.includes(QL.rs)?'(bắt buộc, BR-10)':'';
+ document.getElementById('qlCnt').textContent=QL.note.length+'/500';
+}
+function saveQL(){
+ const err=m=>{document.getElementById('qlErr').textContent=m;return false};
+ if(!QL.cust)return err('Chưa chọn khách hàng.');
+ const c=cust(QL.cust);if(!canLog(c))return err('Bạn không có quyền ghi nhanh cho khách này.');
+ if(!QL.rs)return err('Chưa chọn kết quả.');
+ if(!QL.ch)return err('Chưa chọn kênh.');
+ let next=null;
+ if(QL.day!==''){const [h,mi]=(QL.time||'').split(':').map(Number);if(isNaN(h))return err('Chưa nhập giờ hẹn.');next=dayIdx(S.now)*D+Number(QL.day)*D+h*60+mi;if(next<=S.now)return err('Giờ hẹn phải sau thời điểm hiện tại.')}
+ else if(NEEDS_NEXT.includes(QL.rs))return err('Kết quả “'+QL.rs+'” bắt buộc đặt hẹn lần sau (BR-10).');
+ const sec=Math.round((performance.now()-QL.t0)/1000);
+ const lg={id:'g'+(logs.length+1),cust:QL.cust,deal:QL.deal||null,t:S.now,by:R().short,ch:QL.ch,rs:QL.rs,note:QL.note.trim(),next};
+ logs.push(lg);
+ if(next)tasks.push({id:'t'+(tasks.length+1),owner:S.role,cust:QL.cust,deal:QL.deal||null,text:'Gọi lại',due:next,status:'todo',log:lg.id});
+ closeModal();render();
+ toast('Đã lưu tương tác'+(next?' và tạo việc “Gọi lại” lúc '+fmt(next):'')+'. Thao tác mất '+sec+' giây'+(sec<=30?' (đạt NFR-01, ≤ 30 giây).':' (vượt 30 giây, chưa đạt NFR-01).'),sec>30);
+}
+function closeModal(){clearInterval(qlTimer);QL=null;RS=null;HF=null;RET=null;DC=null;CF=null;IM=null;LC=null;LI=null;SG=null;DL=null;PY=null;IV=null;document.getElementById('modal').innerHTML=''}
+
+/* ===== M4: Dời hạn ===== */
+let RS=null;
+function openResched(id){
+ RS={id};const t=tasks.find(x=>x.id===id),c=cust(t.cust);
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Dời hạn việc</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(t.text)} · hạn hiện tại ${fmt(t.due)}</small></div>
+ <div class="fld"><label>Hạn mới</label><div class="two"><select id="rsDay">${[0,1,2].map(i=>`<option value="${i}" ${i===1?'selected':''}>${['Hôm nay','Ngày mai','Ngày kia'][i]} · ${DAYS[dow(S.now+i*D)]}</option>`).join('')}</select><input type="time" id="rsTime" value="10:00"></div></div>
+ <div class="err" id="rsErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="saveResched">Lưu</button></div></div></div>`}
+function saveResched(){
+ const t=tasks.find(x=>x.id===RS.id),[h,mi]=document.getElementById('rsTime').value.split(':').map(Number),day=Number(document.getElementById('rsDay').value);
+ if(isNaN(h)){document.getElementById('rsErr').textContent='Chưa nhập giờ.';return}
+ const nd=dayIdx(S.now)*D+day*D+h*60+mi;
+ if(nd<=S.now){document.getElementById('rsErr').textContent='Hạn mới phải sau thời điểm hiện tại.';return}
+ if(t.owner!==S.role){document.getElementById('rsErr').textContent='Chỉ người được giao việc mới dời hạn được.';return}
+ t.due=nd;closeModal();render();toast('Đã dời hạn sang '+fmt(nd)+'. Việc không còn quá hạn.');
+}
+
+/* ===== M2: Lead ===== */
+function leadRow(l,chk){
+ const due=leadDue(l),over=leadOver(l),wait=S.now-l.t,off=dow(l.t)>=5||tod(l.t)<480||tod(l.t)>=1020;
+ return `<tr class="${over?'od':''}">${chk?`<td style="width:36px"><input type="checkbox" data-chg="selLead" data-id="${l.id}" ${S.sel.has(l.id)?'checked':''}></td>`:''}
+ <td><b>${esc(l.name)}</b><br><small style="color:var(--mut)">${esc(l.co)}</small></td><td>${esc(l.phone)}</td>
+ <td>${esc(l.src)}<br><small style="color:var(--mut)">${esc(l.camp)}</small></td>
+ <td>${fmt(l.t)}${off?'<br><small style="color:var(--mut)">Ngoài giờ làm việc</small>':''}</td><td>${dur(wait)}</td>
+ <td>${over?`<span class="tag red">Quá hạn ${dur(S.now-due)}</span>`:`<span class="tag grn">Còn ${dur(due-S.now)}</span>`}<br><small style="color:var(--mut)">Hạn ${fmt(due)}</small></td></tr>`}
+function viewLead(){
+ const k=K();
+ if(k==='cskh'||k==='kt'||k==='ktoan')return `<div class="sec"><div class="empty">Bạn không có quyền xem module Lead.</div></div>`;
+ if(k==='mkt'){const mine=leads.filter(l=>l.imp).sort((a,b)=>b.t-a.t);
+  return `<div class="banner info">Marketing nhập lead từ file kèm nguồn và chiến dịch. Lead vào hàng chờ của Trưởng phòng KD; Marketing không phân bổ và không xem hàng chờ.</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn pri" data-act="liOpen">Nhập lead từ file</button></div>
+  <div class="sec"><h3>Lead đã nhập (${mine.length})</h3>${mine.length?`<table><tr><th>Lead</th><th>Điện thoại</th><th>Nguồn/Chiến dịch</th><th>Nhập lúc</th><th>Trạng thái</th></tr>${mine.map(l=>`<tr><td><b>${esc(l.name)}</b><br><small style="color:var(--mut)">${esc(l.co)}</small></td><td>${esc(l.phone)}</td><td>${esc(l.src)}<br><small style="color:var(--mut)">${esc(l.camp)}</small></td><td>${fmt(l.t)}</td><td>${l.st==='Mới'?'<span class="tag">Chờ phân bổ</span>':'<span class="tag grn">'+esc(l.st)+'</span>'}</td></tr>`).join('')}</table>`:'<div class="empty">Chưa nhập lead nào trong phiên này</div>'}</div>`}
+ if(k==='nv'){
+  const mine=leads.filter(l=>(l.st==='Đã phân bổ'||l.st==='Đã chuyển deal')&&l.owner===S.role&&l.at<=S.now).sort((a,b)=>b.at-a.at);
+  return `<div class="banner warn">Hệ thống không cho nhân viên xem hàng chờ chung. Bạn chỉ thấy lead được giao cho mình.</div>
+  <div class="sec"><h3>Lead của tôi (${mine.length})</h3>${mine.length?`<table><tr><th>Lead</th><th>Điện thoại</th><th>Nguồn/Chiến dịch</th><th>Vào lúc</th><th>Phân bổ lúc</th><th></th><th></th></tr>${mine.map(l=>`<tr><td><b>${esc(l.name)}</b><br><small style="color:var(--mut)">${esc(l.co)}</small></td><td>${esc(l.phone)}</td><td>${esc(l.src)}<br><small style="color:var(--mut)">${esc(l.camp)}</small></td><td>${fmt(l.t)}</td><td>${fmt(l.at)}</td><td>${l.old?'<span class="tag blu">Khách cũ</span>':''}</td><td style="text-align:right">${l.st==='Đã chuyển deal'?`<span class="tag grn">Đã chuyển deal</span> <button class="btn sm" data-act="convLead" data-id="${l.id}">Mở hồ sơ khách</button>`:`<button class="btn sm pri" data-act="convLead" data-id="${l.id}">Chuyển thành khách</button>`}</td></tr>`).join('')}</table>`:'<div class="empty">Chưa có lead nào được giao cho bạn</div>'}</div>`}
+ const tp=k==='tp', q=queue(), over=q.filter(leadOver).length;
+ const tabs=`<div class="tabs"><button class="tab ${S.tab==='queue'?'on':''}" data-act="tab" data-t="queue">Chờ phân bổ (${q.length})</button><button class="tab ${S.tab==='assigned'?'on':''}" data-act="tab" data-t="assigned">Đã phân bổ</button>${tp?`<button class="tab ${S.tab==='redist'?'on':''}" data-act="tab" data-t="redist">Chia lại khách</button><button class="btn sm" style="margin-left:auto" data-act="liOpen">Nhập lead từ file</button>`:''}</div>`;
+ const view=!tp?'<div class="banner info">Chế độ chỉ xem: Trưởng phòng KD mới được phân bổ và chia lại.</div>':'';
+ if(S.tab==='redist'&&tp)return view+tabs+viewRedist();
+ if(S.tab==='assigned'){
+  const as=leads.filter(l=>l.st==='Đã phân bổ'&&l.at<=S.now).sort((a,b)=>b.at-a.at);
+  return view+tabs+`<div class="sec">${as.length?`<table><tr><th>Lead</th><th>Điện thoại</th><th>Nguồn/Chiến dịch</th><th>Vào lúc</th><th>Phân bổ lúc</th><th>Thời gian chờ</th><th>Người phụ trách</th><th></th></tr>${as.map(l=>`<tr><td><b>${esc(l.name)}</b><br><small style="color:var(--mut)">${esc(l.co)}</small></td><td>${esc(l.phone)}</td><td>${esc(l.src)}<br><small style="color:var(--mut)">${esc(l.camp)}</small></td><td>${fmt(l.t)}</td><td>${fmt(l.at)}</td><td>${dur(l.at-l.t)}</td><td>${tp?`<select data-chg="reassign" data-id="${l.id}" style="border:1px solid var(--line);border-radius:8px;padding:4px 6px">${Object.keys(EMP).filter(e=>EMP[e].active||e===l.owner).map(e=>`<option value="${e}" ${e===l.owner?'selected':''}>${EMP[e].name}</option>`).join('')}</select>`:esc(ROLES[l.owner].short)}${l.old?'<br><span class="tag blu">Khách cũ</span> <small style="color:var(--mut)">tự gán theo SĐT</small>':''}</td><td style="text-align:right"><button class="btn sm pri" data-act="convLead" data-id="${l.id}">Chuyển thành khách</button></td></tr>`).join('')}</table>`:'<div class="empty">Chưa có lead nào được phân bổ</div>'}</div><div class="legend">Khách cũ quay lại qua kênh khác được tự gán cho người đang phụ trách (khớp theo số điện thoại). Trưởng phòng KD vẫn đổi được nếu có tranh chấp.</div>`}
+ const sel=[...S.sel].filter(id=>q.some(l=>l.id===id));
+ return view+tabs+`<div class="cards"><div class="card"><small>Chờ phân bổ</small><b>${q.length}</b></div><div class="card ${over?'red':''}"><small>Quá hạn</small><b>${over}</b></div><div class="card"><small>Chờ lâu nhất</small><b style="font-size:18px">${q.length?dur(S.now-q[0].t):'-'}</b></div></div>
+ <div class="sec">${tp&&q.length?`<div class="bar"><b>Đã chọn ${sel.length} lead</b><select data-chg="assignTo"><option value="">Chọn nhân viên…</option>${Object.keys(EMP).filter(e=>EMP[e].active).map(e=>`<option value="${e}" ${S.assignTo===e?'selected':''}>${EMP[e].name} (${leads.filter(l=>l.owner===e&&l.st==='Đã phân bổ').length} lead đang xử lý)</option>`).join('')}</select><button class="btn pri" data-act="assign" ${sel.length&&S.assignTo?'':'disabled'}>Phân bổ</button><button class="btn sm" data-act="selAll">Chọn tất cả</button></div>`:''}
+ ${q.length?`<table><tr>${tp?'<th></th>':''}<th>Lead</th><th>Điện thoại</th><th>Nguồn/Chiến dịch</th><th>Vào lúc</th><th>Đã chờ</th><th>Hạn phân bổ</th></tr>${q.map(l=>leadRow(l,tp)).join('')}</table>`:'<div class="empty">Không có lead chờ phân bổ</div>'}</div>
+ <div class="legend">Hạn phân bổ là 2 giờ làm việc kể từ lúc lead vào (giả định giờ làm việc 08:00-17:00, thứ Hai đến thứ Sáu); lead vào ngoài giờ tính từ đầu giờ làm việc kế tiếp. Lead nằm trong hàng chờ cả ngoài giờ, kể cả cuối tuần. Dùng ô “Giờ demo” phía trên để xem lead chuyển sang Quá hạn.</div>`}
+function doAssign(){
+ const ids=[...S.sel].filter(id=>queue().some(l=>l.id===id));if(!ids.length||!S.assignTo)return;
+ if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được phân bổ.',true);return}
+ const who=S.assignTo;ids.forEach(id=>{const l=leads.find(x=>x.id===id);l.st='Đã phân bổ';l.owner=who;l.at=S.now});
+ notify(who,'Bạn được giao '+ids.length+' lead mới.',{page:'lead'});
+ S.sel.clear();S.assignTo='';render();toast('Đã phân bổ '+ids.length+' lead cho '+EMP[who].name+'. '+EMP[who].name+' nhận thông báo trong ứng dụng.');
+}
+
+/* ===== M2: Chia lại khách ===== */
+function viewRedist(){
+ const r=S.redist,mine=custs.filter(c=>c.owner===r.from),act=Object.keys(EMP).filter(e=>EMP[e].active&&e!==r.from);
+ if(!act.includes(r.to))r.to=act[0]||'';
+ const sel=[...r.sel].filter(id=>mine.some(c=>c.id===id));
+ const locked=!EMP[r.from].active&&mine.length===0;
+ return `${r.sum?`<div class="sum">${r.sum}</div>`:''}
+ <div class="sec"><div class="bar"><span>Nhân viên cần chia lại</span><select data-chg="rFrom">${Object.keys(EMP).map(e=>`<option value="${e}" ${e===r.from?'selected':''}>${EMP[e].name}${EMP[e].active?'':' (đã nghỉ)'} · ${custs.filter(c=>c.owner===e).length} khách</option>`).join('')}</select>
+  <button class="btn sm" data-act="toggleActive">${EMP[r.from].active?'Đánh dấu nghỉ việc':'Đánh dấu đi làm lại'}</button>${locked?'<span class="tag red">Tài khoản đã khóa đăng nhập, dữ liệu lịch sử vẫn giữ</span>':''}</div>
+ ${mine.length?`<div class="bar" style="background:#fafbfd;border-color:var(--line)"><b>Đã chọn ${sel.length}/${mine.length} khách</b><span>Chuyển cho</span><select data-chg="rTo">${act.map(e=>`<option value="${e}" ${e===r.to?'selected':''}>${EMP[e].name}</option>`).join('')}</select><button class="btn pri" data-act="redist" ${sel.length&&r.to?'':'disabled'}>Chia lại</button><button class="btn sm" data-act="rAll">Chọn tất cả</button></div>
+ <table><tr><th></th><th>Khách hàng</th><th>Deal đang mở</th><th>Deal đã ký</th><th>Việc chưa làm</th></tr>${mine.map(c=>`<tr><td style="width:36px"><input type="checkbox" data-chg="rSel" data-id="${c.id}" ${r.sel.has(c.id)?'checked':''}></td><td><b>${esc(c.name)}</b></td><td>${openDeals(c.id).length}</td><td>${deals.filter(d=>d.cust===c.id&&d.stage==='Đã ký').length}</td><td>${tasks.filter(t=>t.cust===c.id&&t.owner===r.from&&t.status==='todo').length}</td></tr>`).join('')}</table>`:'<div class="empty">'+EMP[r.from].name+' không còn khách nào</div>'}</div>
+ <div class="legend">Khi chia lại: hồ sơ và lịch sử chăm sóc giữ nguyên; deal đang mở và việc chưa làm chuyển theo người nhận; deal đã ký giữ người phụ trách cũ để số liệu doanh số không đổi. Chỉ chia cho nhân viên KD đang hoạt động.</div>`}
+function doRedist(){
+ if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được chia lại khách.',true);return}
+ const r=S.redist,ids=[...r.sel].filter(id=>custs.find(c=>c.id===id&&c.owner===r.from));if(!ids.length||!r.to)return;
+ let nd=0,ns=0,nt=0;
+ ids.forEach(id=>{const c=cust(id);c.owner=r.to;
+  deals.filter(d=>d.cust===id).forEach(d=>{if(d.stage==='Đã ký'||d.stage==='Thua')ns++;else{d.owner=r.to;nd++}});
+  tasks.filter(t=>t.cust===id&&t.owner===r.from&&t.status==='todo').forEach(t=>{t.owner=r.to;nt++})});
+ notify(r.to,'Bạn được chia lại '+ids.length+' khách từ '+EMP[r.from].name+'.',{page:'cust'});
+ r.sum='<b>Đã chia lại '+ids.length+' khách từ '+EMP[r.from].name+' cho '+EMP[r.to].name+'.</b><br>'+nd+' deal đang mở chuyển sang '+EMP[r.to].name+' · '+ns+' deal đã ký giữ '+EMP[r.from].name+' · '+nt+' việc chuyển theo, giữ nguyên hạn · lịch sử chăm sóc giữ nguyên.';
+ r.sel.clear();render();
+}
+
+/* ===== M5: Bàn giao Kinh doanh sang Kỹ thuật (T-26; FR-06, BR-04, BR-13..15; SRS G2-01..G2-22) ===== */
+let HF=null,RET=null;
+const FLD_LABEL={addr:'Địa chỉ lắp đặt',contact:'Người liên hệ tại chỗ',phone:'Số điện thoại tại chỗ',hours:'Khung giờ tiếp cận',infra:'Lưu ý hạ tầng'};
+const FLD_FOCUS={addr:'hfAddr',contact:'hfContact',phone:'hfPhone',hours:'hfStart',infra:'hfInfra'};
+const ID_FLD={hfAddr:'addr',hfContact:'contact',hfPhone:'phone',hfStart:'hours',hfEnd:'hours',hfInfra:'infra'};
+const hv=id=>{const e=document.getElementById(id);return e?e.value:''};
+const normPhone=s=>/^[0-9 .]*$/.test(s)?s.replace(/[ .]/g,''):null; /* chấp nhận khoảng trắng, dấu chấm; chuẩn hóa trước khi lưu (G2-07) */
+const fmtPhone=d=>d.length>=10?d.slice(0,4)+' '+d.slice(4,7)+' '+d.slice(7):d;
+
+/* Kiểm tra toàn bộ trường cùng lúc (G2-06); trả về {trường: thông báo lỗi} */
+function validateHF(v){
+ const e={};
+ if(!v.addr)e.addr='Chưa nhập địa chỉ lắp đặt.';else if(v.addr.length>255)e.addr='Địa chỉ tối đa 255 ký tự.';
+ if(!v.contact)e.contact='Chưa nhập người liên hệ tại chỗ.';else if(v.contact.length>100)e.contact='Tối đa 100 ký tự.';
+ if(!v.phone)e.phone='Chưa nhập số điện thoại.';
+ else{const n=normPhone(v.phone);if(n===null||!/^0\d{9,10}$/.test(n))e.phone='Số điện thoại không hợp lệ (10 hoặc 11 chữ số, bắt đầu bằng 0).'}
+ if(!v.start&&!v.end)e.hours='Chưa nhập giờ bắt đầu và giờ kết thúc.';
+ else if(!v.start)e.hours='Chưa nhập giờ bắt đầu.';
+ else if(!v.end)e.hours='Chưa nhập giờ kết thúc.';
+ else if(v.end<=v.start)e.hours='Giờ kết thúc phải sau giờ bắt đầu.';
+ if(v.infra.length>255)e.infra='Lưu ý hạ tầng tối đa 255 ký tự.';
+ return e}
+function showHFErrors(e){
+ Object.keys(FLD_LABEL).forEach(k=>{const w=document.getElementById('fld-'+k),m=document.getElementById('err-'+k);if(w)w.classList.toggle('bad',!!e[k]);if(m)m.textContent=e[k]||''});
+ const ks=Object.keys(e),s=document.getElementById('hfSum');
+ s.innerHTML=ks.length?`<div class="errsum"><b>Chưa gửi được.</b> ${ks.length} trường cần bổ sung hoặc sửa:<ul>${ks.map(k=>`<li><b>${FLD_LABEL[k]}</b>: ${e[k]}</li>`).join('')}</ul></div>`:'';
+ if(ks.length){s.scrollIntoView({block:'nearest'});const f=document.getElementById(FLD_FOCUS[ks[0]]);if(f)f.focus()}}
+
+/* Mở form: kiểm tra quyền (G2-03), deal Đã ký (G2-01), mỗi deal một form (G2-02) */
+function startHandoff(did){
+ const dl=deal(did),c=cust(dl.cust),ex=handoffs.find(f=>f.deal===did);
+ if(!canSend(c)){toast('Chỉ Nhân viên KD phụ trách khách và Trưởng phòng KD được gửi form bàn giao.',true);return}
+ if(dl.stage!=='Đã ký'){toast('Chỉ bàn giao khi deal đã “Đã ký”. Deal “'+esc(dl.name)+'” đang ở “'+dl.stage+'”.',true);return}
+ if(ex){
+  if(ex.sentAt>S.now){toast('Deal này đã có form bàn giao gửi lúc '+fmt(ex.sentAt)+' (sau giờ demo hiện tại). Đổi giờ demo để xem.',true);return}
+  toast('Deal đã có form bàn giao, hệ thống mở form hiện có.',true);
+  if(ex.state==='back'&&ex.byKey===S.role)openHFEdit(ex.id);else openHFView(ex.id);return}
+ HF={mode:'new',deal:did};openHFModal()}
+function openHFEdit(id){HF={mode:'edit',id};openHFModal()}
+function openHFView(id){HF={mode:'view',id};openHFModal()}
+function hoStatus(f){
+ if(f.state==='recv')return `<span class="tag blu">Đã nhận</span><br><small style="color:var(--mut)">${esc(f.recvBy)} · ${fmt(f.recvAt)}<br>Xác nhận sau ${dur(f.recvAt-f.sentAt)}</small>`;
+ if(f.state==='back'){const r=f.returns[f.returns.length-1];return `<span class="tag red">Cần bổ sung</span><br><small style="color:var(--mut)">${esc(r.reason)}${r.note?': '+esc(r.note):''}</small>`}
+ return hoOver(f)?`<span class="tag red">Quá hạn xác nhận ${dur(S.now-f.due)}</span>`:`<span class="tag grn">Còn ${dur(f.due-S.now)}</span>`}
+function openHFModal(){
+ const f=HF.id?handoffs.find(x=>x.id===HF.id):null,dl=deal(f?f.deal:HF.deal),c=cust(dl.cust),view=HF.mode==='view';
+ const hp=f?f.hours.split('-'):['',''];
+ const v=f?{addr:f.addr,contact:f.contact,phone:fmtPhone(f.phone),start:hp[0],end:hp[1],infra:f.infra}:{addr:HQ[c.id]||'',contact:'',phone:'',start:'',end:'',infra:''};
+ const pre=!f&&!!HQ[c.id];
+ const lastRet=f&&f.returns.length?f.returns[f.returns.length-1]:null;
+ let body=`<div class="kv"><span>Khách hàng</span><b>${esc(c.name)}</b><span>Deal</span><b>${esc(dl.name)}</b><span>Người gửi</span><b>${esc(f?f.by:R().short)}</b>${f?`<span>Gửi lúc</span><b>${fmt(f.sentAt)}</b><span>Hạn xác nhận</span><b>${fmt(f.due)} <small style="color:var(--mut);font-weight:400">(4 giờ làm việc)</small></b><span>Trạng thái</span><div>${hoStatus(f)}</div>`:''}</div>`;
+ let foot;
+ if(view){
+  body+=`<div class="kv"><span>Địa chỉ lắp đặt</span><b>${esc(v.addr)}</b><span>Người liên hệ tại chỗ</span><b>${esc(v.contact)}</b><span>Số điện thoại</span><b>${esc(v.phone)}</b><span>Khung giờ tiếp cận</span><b>${esc(f.hours.replace('-',' - '))}</b><span>Lưu ý hạ tầng</span><b>${v.infra?esc(v.infra):'<span style="font-weight:400">Không có</span>'}</b></div>`;
+  if(f.returns.length)body+=`<b style="font-size:13px">Lịch sử trả lại (${f.returns.length})</b>`+f.returns.slice().reverse().map(r=>`<div class="log"><div class="lt"><span class="tag red">${esc(r.reason)}</span><small>${esc(r.by)} · ${fmt(r.at)}</small></div>${r.note?`<div>${esc(r.note)}</div>`:''}</div>`).join('');
+  body+=f.state==='recv'?'<div class="note">Form đã nhận nên bị khóa, không sửa được (G2-11). Thông tin khảo sát và lắp đặt do Kỹ thuật ghi ở hồ sơ triển khai.</div>':f.state==='wait'?'<div class="note">Form đang chờ Kỹ thuật nhận nên chưa sửa được. Nếu Kỹ thuật trả lại, người gửi sửa và gửi lại.</div>':'';
+  foot=`<button class="btn" data-act="closeModal">Đóng</button>`;
+  if(f.state==='wait'&&K()==='kt')foot+=`<button class="btn" data-act="retHo" data-id="${f.id}">Trả lại</button><button class="btn pri" data-act="recvHo" data-id="${f.id}">Đã nhận</button>`;
+  if(f.state==='back'&&f.byKey===S.role)foot+=`<button class="btn pri" data-act="editHo" data-id="${f.id}">Sửa và gửi lại</button>`;
+ }else{
+  if(lastRet)body+=`<div class="banner warn">Kỹ thuật trả lại: <b>${esc(lastRet.reason)}</b>${lastRet.note?' · '+esc(lastRet.note):''}. Sửa các trường rồi gửi lại; hạn xác nhận tính lại từ lúc gửi lại.</div>`;
+  body+=`<div id="hfSum"></div>
+  <div class="fld" id="fld-addr"><label>Địa chỉ lắp đặt <i>*</i></label><input type="text" id="hfAddr" maxlength="255" value="${esc(v.addr)}"><div class="ferr" id="err-addr"></div>${f?'':`<div class="hint">${pre?'Điền sẵn từ địa chỉ trụ sở của khách, có thể sửa (địa chỉ lắp đặt có thể khác trụ sở).':'Hồ sơ khách chưa có địa chỉ trụ sở nên chưa điền sẵn.'}</div>`}</div>
+  <div class="fld" id="fld-contact"><label>Người liên hệ tại chỗ <i>*</i></label><input type="text" id="hfContact" maxlength="100" value="${esc(v.contact)}"><div class="ferr" id="err-contact"></div></div>
+  <div class="fld" id="fld-phone"><label>Số điện thoại tại chỗ <i>*</i></label><input type="text" id="hfPhone" inputmode="tel" placeholder="0912 345 678" value="${esc(v.phone)}"><div class="ferr" id="err-phone"></div><div class="hint">10 hoặc 11 chữ số, bắt đầu bằng 0; được nhập khoảng trắng hoặc dấu chấm.</div></div>
+  <div class="fld" id="fld-hours"><label>Khung giờ tiếp cận <i>*</i></label><div class="hrs"><input type="time" id="hfStart" value="${esc(v.start)}"><span>đến</span><input type="time" id="hfEnd" value="${esc(v.end)}"></div><div class="ferr" id="err-hours"></div></div>
+  <div class="fld" id="fld-infra"><label>Lưu ý hạ tầng (không bắt buộc)</label><textarea id="hfInfra" maxlength="255" placeholder="Ví dụ: cần xin phép ban quản lý tòa nhà">${esc(v.infra)}</textarea><div class="hint" id="hfCnt">${v.infra.length}/255</div><div class="ferr" id="err-infra"></div></div>`;
+  foot=`<button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="submitHF">${f?'Gửi lại sang Kỹ thuật':'Gửi sang Kỹ thuật'}</button>`}
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md wide"><div class="mh"><b>Form bàn giao sang Kỹ thuật</b><button class="x" data-act="closeModal">×</button></div><div class="mb">${body}</div><div class="mf">${foot}</div></div></div>`}
+
+function submitHF(){
+ const v={addr:hv('hfAddr').trim(),contact:hv('hfContact').trim(),phone:hv('hfPhone').trim(),start:hv('hfStart'),end:hv('hfEnd'),infra:hv('hfInfra').trim()};
+ let f=HF.id?handoffs.find(x=>x.id===HF.id):null;
+ const dl=deal(f?f.deal:HF.deal),c=cust(dl.cust);
+ if(!canSend(c)){toast('Chỉ Nhân viên KD phụ trách khách và Trưởng phòng KD được gửi form bàn giao.',true);return}
+ if(dl.stage!=='Đã ký'){toast('Chỉ bàn giao khi deal đã “Đã ký”.',true);return}
+ if(!f&&handoffs.some(x=>x.deal===dl.id)){closeModal();toast('Deal đã có form bàn giao, hệ thống từ chối tạo form mới.',true);return}
+ if(f&&f.state!=='back'){closeModal();toast('Form không ở trạng thái “Cần bổ sung” nên không gửi lại được.',true);return}
+ const e=validateHF(v);showHFErrors(e);
+ if(Object.keys(e).length)return;
+ const rec={addr:v.addr,contact:v.contact,phone:normPhone(v.phone),hours:v.start+'-'+v.end,infra:v.infra};
+ if(f){Object.assign(f,rec,{state:'wait',sentAt:S.now,due:addWork(S.now,SLA_MIN),byKey:S.role,by:R().short});f.sendLog.push(S.now);
+  notify('kt','Bàn giao gửi lại: '+c.name+' · '+dl.name+' (gửi bởi '+f.by+'). Hạn xác nhận '+fmt(f.due)+'.',{page:'ho'})}
+ else{f=Object.assign({id:'h'+(handoffs.length+1),deal:dl.id,cust:c.id,byKey:S.role,by:R().short,sentAt:S.now,due:addWork(S.now,SLA_MIN),state:'wait',recvBy:null,recvAt:null,dstate:'Chờ nhận bàn giao',returns:[],sendLog:[S.now],dhist:[]},rec);
+  handoffs.push(f);notify('kt','Bàn giao mới: '+c.name+' · '+dl.name+' (gửi bởi '+f.by+'). Hạn xác nhận '+fmt(f.due)+'.',{page:'ho'})}
+ closeModal();render();
+ toast('Đã gửi form bàn giao. Trạng thái: Chờ nhận bàn giao, hạn xác nhận '+fmt(f.due)+' (4 giờ làm việc). Kỹ thuật nhận thông báo trong ứng dụng.');
+}
+
+/* Kỹ thuật: Đã nhận (G2-11..13) và Trả lại (G2-19..22, Should) */
+function recvHo(id){
+ const f=handoffs.find(x=>x.id===id);
+ if(K()!=='kt'){toast('Chỉ vai trò Kỹ thuật được bấm “Đã nhận”.',true);return}
+ if(f.state==='recv'){closeModal();render();toast('Form đã được nhận bởi '+f.recvBy+' lúc '+fmt(f.recvAt)+'. Hệ thống không ghi thêm.',true);return}
+ if(f.state!=='wait'){toast('Form đang ở “Cần bổ sung”, chưa nhận được.',true);return}
+ const was=hoOver(f);
+ f.state='recv';f.recvBy=R().short;f.recvAt=S.now;f.dstate='Đã nhận bàn giao';
+ notify(f.byKey,'Kỹ thuật đã nhận bàn giao '+cust(f.cust).name+' · '+deal(f.deal).name+'.',{form:f.id});
+ closeModal();render();
+ toast('Đã nhận bàn giao. Trạng thái triển khai: Đã nhận bàn giao; form bị khóa; '+esc(f.by)+' nhận thông báo.'+(was?' Dấu quá hạn đã mất, thời gian xác nhận thực tế lưu để so với SLA.':''));
+}
+function openRet(id){
+ const f=handoffs.find(x=>x.id===id);RET={id};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Trả lại form bàn giao</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(cust(f.cust).name)}</b><br><small>${esc(deal(f.deal).name)} · gửi bởi ${esc(f.by)} lúc ${fmt(f.sentAt)}</small></div>
+ <div class="fld"><label>Lý do <i>*</i></label><select id="retReason" data-chg="retReason"><option value="">Chọn lý do…</option>${HO_REASONS.map(r=>`<option>${r}</option>`).join('')}</select></div>
+ <div class="fld"><label>Ghi chú <span id="retReq" style="color:var(--red)"></span></label><textarea id="retNote" maxlength="255"></textarea></div>
+ <div class="err" id="retErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="saveRet">Trả lại</button></div></div></div>`}
+function saveRet(){
+ const f=handoffs.find(x=>x.id===RET.id),r=hv('retReason'),n=hv('retNote').trim(),err=m=>{document.getElementById('retErr').textContent=m};
+ if(K()!=='kt')return err('Chỉ vai trò Kỹ thuật được trả lại form.');
+ if(f.state==='recv')return err('Form đã “Đã nhận”, chỉ trả lại được trước khi nhận.');
+ if(!r)return err('Lý do trả lại là bắt buộc.');
+ if(r==='Khác'&&!n)return err('Lý do “Khác” bắt buộc nhập ghi chú.');
+ f.state='back';f.returns.push({by:R().short,at:S.now,reason:r,note:n});
+ notify(f.byKey,'Kỹ thuật trả lại bàn giao '+cust(f.cust).name+' · '+deal(f.deal).name+': '+r+'.',{form:f.id});
+ closeModal();render();toast('Đã trả lại form, trạng thái “Cần bổ sung”. '+esc(f.by)+' nhận thông báo; trạng thái triển khai của khách vẫn là Chờ nhận bàn giao.');
+}
+
+/* Danh sách bàn giao (hàng chờ của Kỹ thuật; chế độ chỉ xem cho Trưởng phòng KD, Giám đốc) */
+function viewHo(){
+ const k=K();
+ if(k==='cskh'||k==='ktoan'||k==='mkt')return `<div class="sec"><div class="empty">Bạn không có quyền xem danh sách bàn giao.</div></div>`;
+ const all=visHo(),cnt=hoCount();
+ const n=st=>all.filter(f=>f.state===st).length;
+ const list=all.filter(f=>f.state===S.hoTab).sort(S.hoTab==='recv'?(a,b)=>b.recvAt-a.recvAt:(a,b)=>a.sentAt-b.sentAt);
+ const waits=all.filter(f=>f.state==='wait').sort((a,b)=>a.sentAt-b.sentAt);
+ const banner=k==='kt'?'<div class="banner info">Bấm “Đã nhận” khi thông tin đủ; bấm “Trả lại” kèm lý do nếu thiếu hoặc sai. Form gửi sớm nhất nằm trên cùng.</div>':k==='nv'?'<div class="banner info">Bạn chỉ thấy form do mình gửi.</div>':'<div class="banner info">Chế độ chỉ xem: chỉ Kỹ thuật được nhận hoặc trả lại. Người gửi form mới sửa và gửi lại được form của mình.</div>';
+ const acts=f=>{let h=`<button class="btn sm" data-act="viewHo" data-id="${f.id}">Xem form</button>`;
+  if(f.state==='wait'&&k==='kt')h+=`<button class="btn sm pri" data-act="recvHo" data-id="${f.id}">Đã nhận</button><button class="btn sm" data-act="retHo" data-id="${f.id}">Trả lại</button>`;
+  if(f.state==='back'&&f.byKey===S.role)h+=`<button class="btn sm pri" data-act="editHo" data-id="${f.id}">Sửa và gửi lại</button>`;
+  if(f.state==='recv'&&k==='kt'&&f.dstate!=='Đã nghiệm thu')h+=`<button class="btn sm pri" data-act="delOpen" data-id="${f.id}">Cập nhật triển khai</button>`;
+  return `<div class="acts">${h}</div>`};
+ const tabs=[['wait','Chờ nhận'],['back','Cần bổ sung'],['recv','Đã nhận']].map(t=>`<button class="tab ${S.hoTab===t[0]?'on':''}" data-act="hoTab" data-t="${t[0]}">${t[1]} (${n(t[0])})</button>`).join('');
+ const empty={wait:'Không có bàn giao chờ nhận',back:'Không có form cần bổ sung',recv:'Chưa có bàn giao nào được nhận'}[S.hoTab];
+ return `${banner}<div class="cards"><div class="card"><small>Chờ nhận</small><b>${cnt.wait}</b></div><div class="card ${cnt.over?'red':''}"><small>Quá hạn xác nhận</small><b>${cnt.over}</b></div><div class="card"><small>Chờ lâu nhất</small><b style="font-size:18px">${waits.length?dur(S.now-waits[0].sentAt):'-'}</b></div></div>
+ <div class="tabs">${tabs}</div>
+ <div class="sec">${list.length?`<table><tr><th>Khách hàng / Deal</th><th>Người gửi</th><th>Gửi lúc</th><th>Hạn xác nhận</th><th>Trạng thái</th><th></th></tr>${list.map(f=>`<tr class="${hoOver(f)?'od':''}"><td><b>${esc(cust(f.cust).name)}</b><br><small style="color:var(--mut)">${esc(deal(f.deal).name)}</small></td><td>${esc(f.by)}</td><td>${fmt(f.sentAt)}</td><td>${fmt(f.due)}</td><td>${hoStatus(f)}</td><td>${acts(f)}</td></tr>`).join('')}</table>`:`<div class="empty">${empty}</div>`}</div>
+ <div class="legend">Hạn xác nhận = 4 giờ làm việc kể từ lúc gửi (giả định giờ làm việc 08:00-17:00, thứ Hai đến thứ Sáu); gửi ngoài giờ tính từ đầu giờ làm việc kế tiếp, ví dụ gửi 15:00 thứ Sáu thì hạn 10:00 thứ Hai. Quá hạn là trạng thái suy ra, không lưu riêng; khi Kỹ thuật bấm “Đã nhận” dấu quá hạn mất nhưng thời điểm gửi, hạn và thời điểm nhận được giữ. Dùng ô “Giờ demo” để xem form chuyển sang Quá hạn. Kỹ thuật cập nhật trạng thái triển khai (khảo sát, lắp đặt, nghiệm thu) ở tab “Đã nhận” hoặc trên hồ sơ khách.</div>`}
+
+/* ===== Sự kiện ===== */
+
+/* ===== T-31: Báo cáo (M7, FR-12; định nghĩa ở T-28) ===== */
+Object.assign(S,{per:'all',kg:14,kc:7,dcTab:'wait'});
+const KET_BG=2; /* ngày; ngưỡng chậm gửi bàn giao (T-28) */
+const LOST_REASONS=['Giá cao','Chọn nhà cung cấp khác','Chưa có nhu cầu','Khác'];
+const PERS={w1:['Tuần này',7*D,14*D],w0:['Tuần trước',0,7*D],all:['Cả hai tuần demo',0,14*D]};
+const STG=['Liên hệ','Tư vấn','Báo giá','Đàm phán'];
+const ev=t=>t!=null&&t<=S.now;
+const inP=t=>ev(t)&&t>=PERS[S.per][1]&&t<PERS[S.per][2];
+function workMin(a,b){let t=norm(a),n=0;while(t<b){const end=dayIdx(t)*D+1020;n+=Math.min(end,b)-t;t=norm(end)}return n}
+const effStage=d=>(d.stage==='Đã ký'&&!ev(d.signedAt))||(d.stage==='Thua'&&!ev(d.lostAt))?'Đàm phán':d.stage;
+const isSigned=d=>d.stage==='Đã ký'&&ev(d.signedAt);
+const isLost=d=>d.stage==='Thua'&&ev(d.lostAt);
+const repDeals=()=>deals.filter(d=>ev(d.created)&&(K()!=='nv'||d.owner===S.role));
+const payDate=d=>{const p=(d.payHist||[]).filter(x=>x.t<=S.now).sort((a,b)=>a.t-b.t)[0];return p?p.t:null};
+const enterAt=d=>{const e=effStage(d),h=dealHist.filter(x=>x.deal===d.id&&x.to===e&&x.t<=S.now).sort((a,b)=>b.t-a.t)[0];return h?h.t:d.created};
+const ageD=t=>dayIdx(S.now)-dayIdx(t); /* ngày lịch: trừ hai ngày, bỏ phần giờ */
+const sumV=a=>a.reduce((s,d)=>s+(d.val||0),0), missV=a=>a.filter(d=>d.val==null).length;
+const m1=n=>(Math.round(n*10)/10).toString().replace('.',',');
+const ratio=(n,m)=>m?`${n}/${m} = ${m1(100*n/m)}%`:'—'; /* QT-03 */
+const vndS=n=>n.toLocaleString('vi-VN')+' ₫';
+const flagV=a=>missV(a)?` <span class="tag amb">${missV(a)} deal chưa có giá trị</span>`:''; /* QT-05 */
+const tr=(cells,cls)=>`<tr${cls?` class="${cls}"`:''}>${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`;
+const tb=(h,rows)=>rows.length?`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.join('')}</table>`:'<div class="empty">Không có dữ liệu</div>'; /* QT-10 */
+const mc=(id,title,label,body,note)=>`<div class="sec"><div style="padding:12px 16px 0"><b>${id} · ${title}</b>${label?` <span class="tag blu">${label}</span>`:''}</div>${body}${note?`<div class="legend" style="padding:8px 16px">${note}</div>`:''}</div>`;
+const bar=(label,v,max,txt)=>`<div class="brow"><span>${label}</span><div class="bt"><i style="width:${max?Math.round(100*v/max):0}%"></i></div><b>${txt}</b></div>`;
+const big=(n,sub)=>`<div style="padding:12px 16px"><b style="font-size:24px">${n}</b> ${sub||''}</div>`;
+const dn=d=>`<b>${esc(cust(d.cust).name)}</b><br><small style="color:var(--mut)">${esc(d.name)}</small>`;
+const SHOW={ds:['tp','gd','nv','ktoan'],pl:['tp','gd','nv'],ld:['tp','gd','nv'],ng:['tp','gd','mkt'],lm:['tp','gd','nv'],bg:['tp','gd','nv','kt'],dg:['tp','gd','nv']}; /* T-28 mục 7.1 */
+const can=g=>SHOW[g].includes(K());
+function viewRp(){
+ const k=K();
+ if(k==='cskh')return '<div class="sec"><div class="empty">CSKH không có báo cáo trong MVP (T-28, mục 7.1).</div></div>';
+ const P=PERS[S.per];let out='';
+ const bn={nv:'Bạn chỉ thấy số liệu của deal và lead mình phụ trách; tổng được tính từ các deal của bạn, không trích từ tổng chung (QT-07).',kt:'Kỹ thuật chỉ xem nhóm Bàn giao và không thấy giá trị deal, thanh toán, hóa đơn (BR-19).',mkt:'Marketing chỉ xem nhóm Nguồn.',ktoan:'Kế toán chỉ xem nhóm Doanh số.',gd:'Giám đốc xem toàn bộ báo cáo.',tp:'Trưởng phòng KD xem toàn bộ báo cáo.'}[k];
+ out+=`<div class="banner info">${bn}</div>
+ <div class="sec"><div class="bar"><span>Kỳ <select data-chg="per">${Object.keys(PERS).map(x=>`<option value="${x}" ${S.per===x?'selected':''}>${PERS[x][0]}</option>`).join('')}</select></span>
+  <span>Deal kẹt sau (KET_GD) <select data-chg="kg">${[14,7,3].map(x=>`<option ${S.kg===x?'selected':''} value="${x}">${x} ngày</option>`).join('')}</select></span>
+  <span>Hạn thu tiền sau ký (KET_COC) <select data-chg="kc">${[7,3].map(x=>`<option ${S.kc===x?'selected':''} value="${x}">${x} ngày</option>`).join('')}</select></span>
+  <span style="color:var(--mut)">Giờ xem: <b>${fmt(S.now)}</b> · Kỳ nửa mở, tuần bắt đầu thứ Hai</span></div></div>`;
+ if(can('ds')){
+  const s1=repDeals().filter(d=>isSigned(d)&&inP(d.signedAt)), s2=repDeals().filter(d=>d.stage==='Đã ký'&&inP(payDate(d)));
+  const un=repDeals().filter(d=>isSigned(d)&&payDate(d)==null).sort((a,b)=>a.signedAt-b.signedAt);
+  out+=`<div class="sech">Doanh số</div><div class="sg">
+  ${mc('DS-01','Hợp đồng đã ký','Tính theo mốc: Đã ký',big(s1.length,'hợp đồng · '+vndS(sumV(s1)))+(missV(s1)?`<div style="padding:0 16px 10px">${flagV(s1)}</div>`:''))}
+  ${mc('DS-02','Hợp đồng đã cọc','Tính theo mốc: Đã cọc (gồm tất toán trực tiếp)',big(s2.length,'hợp đồng · '+vndS(sumV(s2)))+(missV(s2)?`<div style="padding:0 16px 10px">${flagV(s2)}</div>`:''))}</div>
+  ${mc('DS-04','Hợp đồng đã ký chưa thu tiền (đối soát)','Tại thời điểm xem',tb(['Khách / Deal','Phụ trách','Giá trị','Ngày ký','Tuổi','Trạng thái'],un.map(d=>{const a=ageD(d.signedAt),o=a>S.kc;return tr([dn(d),esc(ROLES[d.owner].short),d.val==null?'<span class="tag amb">Chưa có</span>':vndS(d.val),fmt(d.signedAt),a+' ngày',o?'<span class="tag red">Quá hạn thu</span>':'<span class="tag">Trong hạn</span>'],o?'od':'')})),`Hai mốc đặt cạnh nhau, không cộng vào cùng một số (QT-02). Tuổi tính theo ngày lịch; quá hạn thu khi tuổi lớn hơn ${S.kc} ngày (KET_COC).`)}`}
+ if(can('pl')){
+  const op=repDeals().filter(d=>STG.includes(effStage(d))),mx=Math.max(1,...STG.map(s=>sumV(op.filter(d=>effStage(d)===s))));
+  const stuck=op.filter(d=>ageD(enterAt(d))>S.kg).sort((a,b)=>enterAt(a)-enterAt(b));
+  const w=repDeals().filter(d=>isSigned(d)&&inP(d.signedAt)).length,l=repDeals().filter(d=>isLost(d)&&inP(d.lostAt)).length;
+  out+=`<div class="sech">Pipeline</div>
+  ${mc('PL-01','Pipeline đang mở theo giai đoạn','Tại thời điểm xem',op.length?STG.map(s=>{const a=op.filter(d=>effStage(d)===s);return bar(s,sumV(a),mx,a.length+' deal · '+vndS(sumV(a)))}).join('')+`<div style="padding:4px 16px 10px"><b>Tổng ${op.length} deal · ${vndS(sumV(op))}</b>${flagV(op)}</div>`:'<div class="empty">Không có dữ liệu</div>')}
+  ${mc('PL-02','Deal kẹt','Tại thời điểm xem',tb(['Khách / Deal','Phụ trách','Giai đoạn','Ở giai đoạn','Giá trị'],stuck.map(d=>tr([dn(d),esc(ROLES[d.owner].short),effStage(d),'<span class="tag red">'+ageD(enterAt(d))+' ngày</span>',d.val==null?'<span class="tag amb">Chưa có</span>':vndS(d.val)],'od'))),`Kẹt khi ở cùng một giai đoạn quá ${S.kg} ngày lịch (KET_GD). Trạng thái suy ra, không lưu thành cột (QT-08). Đổi ngưỡng ở thanh trên để thấy thêm deal kẹt.`)}
+  ${mc('PL-05','Tỷ lệ thắng (win rate)','Kỳ: '+P[0],big(ratio(w,w+l),'')+`<div class="legend" style="padding:0 16px 10px">Đã ký ${w} / (đã ký ${w} + thua ${l}) trong kỳ, theo ngày ký và ngày thua; deal đang mở không tính (QT-03).</div>`)}`}
+ if(can('ld')){
+  const q=queue(),ov=q.filter(leadOver),LV=leads.filter(l=>inP(l.t)&&(k!=='nv'||l.owner===S.role));
+  const due=LV.filter(l=>(l.at!=null&&l.at<=S.now)||S.now>=addWork(l.t,120)),ok=due.filter(l=>l.at!=null&&l.at<=S.now&&l.at<=addWork(l.t,120));
+  const asg=LV.filter(l=>l.at!=null&&l.at<=S.now),avg=asg.length?asg.reduce((s,l)=>s+workMin(l.t,l.at),0)/asg.length/60:null;
+  out+=`<div class="sech">Lead</div><div class="sg">
+  ${k!=='nv'?mc('LD-01','Lead chờ phân bổ và quá hạn','Tại thời điểm xem',big(q.length,'lead chờ · <span class="'+(ov.length?'late':'')+'">'+ov.length+' quá hạn</span>')+`<div class="legend" style="padding:0 16px 10px">Hạn phân bổ 2 giờ làm việc (BR-02).${q.length?' Chờ lâu nhất '+dur(S.now-q[0].t)+'.':''}</div>`):''}
+  ${mc('LD-02','Phân bổ đúng hạn','Kỳ: '+P[0],big(ratio(ok.length,due.length),'')+`<div class="legend" style="padding:0 16px 10px">Thời gian phân bổ trung bình ${avg==null?'—':m1(avg)+' giờ làm việc'} (${asg.length} lead đã phân bổ). Lead chưa phân bổ nhưng đã quá hạn nằm ở mẫu số, không ở tử số.</div>`)}</div>`}
+ if(can('ng')){
+  const LV=leads.filter(l=>inP(l.t)),srcs=[...new Set(LV.map(l=>l.src))];
+  const rows=srcs.map(s=>{const a=LV.filter(l=>l.src===s),dl=a.filter(l=>l.deal&&ev(deal(l.deal).created)),sg=dl.filter(l=>isSigned(deal(l.deal))),op=dl.filter(l=>STG.includes(effStage(deal(l.deal)))).length;return{s,n:a.length,dl:dl.length,sg:sg.length,op}});
+  const sd=deals.filter(d=>isSigned(d)&&inP(d.signedAt)),tot=sumV(sd),ss=[...new Set(sd.map(d=>d.src||'Chưa xác định'))].map(s=>{const a=sd.filter(d=>(d.src||'Chưa xác định')===s);return{s,a,v:sumV(a)}}).sort((a,b)=>b.v-a.v);
+  out+=`<div class="sech">Nguồn</div>
+  ${mc('NG-02','Chuyển đổi theo nguồn: lead → deal → hợp đồng ký','Kỳ sinh ra lead: '+P[0],tb(['Nguồn','Lead','Thành deal','Đã ký','Tỷ lệ ký','Deal đang mở'],rows.map(r=>tr([esc(r.s),r.n,r.dl,r.sg,ratio(r.sg,r.n),r.op]))),'Mẫu số là toàn bộ lead sinh ra trong kỳ, kể cả lead còn đang xử lý, nên tỷ lệ của lead mới còn thấp (QT-06). Tử số theo deal.lead_id (CR-01).')}
+  ${mc('NG-03','Doanh số theo nguồn','Tính theo mốc: Đã ký',ss.length?ss.map(x=>bar(esc(x.s),x.v,ss[0].v,x.a.length+' HĐ · '+vndS(x.v)+' · '+m1(100*x.v/tot)+'%')).join('')+`<div style="padding:4px 16px 10px">${flagV(sd)}</div>`:'<div class="empty">Không có dữ liệu</div>')}`}
+ if(can('lm')){
+  const ls=repDeals().filter(d=>isLost(d)&&inP(d.lostAt)),rs=LOST_REASONS.map(r=>({r,a:ls.filter(d=>d.lostReason===r)})).filter(x=>x.a.length),ot=ls.filter(d=>d.lostReason==='Khác').length;
+  out+=`<div class="sech">Mất hợp đồng</div><div class="sg">
+  ${mc('LM-01','Deal thua theo lý do','Kỳ: '+P[0],tb(['Lý do','Deal','Giá trị'],rs.map(x=>tr([x.r,x.a.length,vndS(sumV(x.a))+flagV(x.a)]))))}
+  ${mc('LM-02','Tỷ lệ lý do “Khác”','Kỳ: '+P[0],big(ratio(ot,ls.length),'')+'<div class="legend" style="padding:0 16px 10px">Tỷ lệ cao nghĩa là danh mục lý do chưa đủ.</div>')}</div>`}
+ if(can('bg')){
+  const fs=visHo().filter(f=>inP(f.sentAt)),cf=fs.filter(f=>f.recvAt!=null&&f.recvAt<=S.now),ok=cf.filter(f=>f.recvAt<=f.due),avg=cf.length?cf.reduce((s,f)=>s+workMin(f.sentAt,f.recvAt),0)/cf.length/60:null;
+  const od=visHo().filter(hoOver).sort((a,b)=>a.due-b.due);
+  const ns=k==='kt'?[]:repDeals().filter(d=>isSigned(d)&&!formOf(d.id)).sort((a,b)=>a.signedAt-b.signedAt);
+  out+=`<div class="sech">Bàn giao</div><div class="sg">
+  ${mc('BG-01','Xác nhận Đã nhận đúng SLA','Kỳ: '+P[0],big(ratio(ok.length,cf.length),'')+`<div class="legend" style="padding:0 16px 10px">Thời gian xác nhận trung bình ${avg==null?'—':m1(avg)+' giờ làm việc'}; chỉ tính form đã xác nhận. SLA 4 giờ làm việc (BR-13).</div>`)}
+  ${mc('BG-02','Form bàn giao quá hạn đang chờ','Tại thời điểm xem',big(od.length,'form')+(od.length?`<div style="padding:0 16px 10px">${od.map(f=>`<div>${esc(cust(f.cust).name)} · quá hạn <span class="late">${m1(workMin(f.due,S.now)/60)} giờ làm việc</span></div>`).join('')}</div>`:''))}</div>
+  ${k==='kt'?'':mc('BG-03','Hợp đồng đã ký chưa gửi bàn giao','Tại thời điểm xem',tb(['Khách / Deal','Phụ trách','Ngày ký','Tuổi','Trạng thái'],ns.map(d=>{const a=ageD(d.signedAt),o=a>KET_BG;return tr([dn(d),esc(ROLES[d.owner].short),fmt(d.signedAt),a+' ngày',o?'<span class="tag red">Chậm gửi</span>':'<span class="tag">Trong hạn</span>'],o?'od':'')})),`Chậm gửi khi đã ký quá ${KET_BG} ngày lịch mà chưa có form (KET_BG).`)}`}
+ if(can('dg')){
+  const ds=discounts.filter(x=>inP(x.t)&&(k!=='nv'||deal(x.deal).owner===S.role)),c=s=>ds.filter(x=>dcSt(x)===s).length,dec=ds.filter(x=>dcSt(x)!=='cho_duyet'),avg=dec.length?dec.reduce((s,x)=>s+(x.at-x.t),0)/dec.length/60:null;
+  out+=`<div class="sech">Duyệt giảm giá</div>
+  ${mc('DG-01','Đề nghị giảm giá và thời gian duyệt','Kỳ: '+P[0],`<div class="cards" style="padding:12px 16px;margin:0"><div class="card"><small>Chờ duyệt</small><b>${c('cho_duyet')}</b></div><div class="card"><small>Đã duyệt</small><b>${c('da_duyet')}</b></div><div class="card"><small>Từ chối</small><b>${c('tu_choi')}</b></div><div class="card"><small>Tỷ lệ duyệt</small><b style="font-size:16px">${ratio(c('da_duyet'),c('da_duyet')+c('tu_choi'))}</b></div></div>`,`Thời gian duyệt trung bình ${avg==null?'—':m1(avg)+' giờ lịch'}; BRD chưa có SLA duyệt nên không đặt mục tiêu. Chỉ có đề nghị cho mức giảm trên ${NGUONG}% (BR-03).`)}`}
+ out+=`<div class="legend">Số liệu tính trực tiếp từ dữ liệu mẫu của prototype (giả định, không phải dữ liệu thật), theo định nghĩa ở T-28, nên khác kết quả truy vấn SQL ở T-29. Chưa làm trong prototype: DS-03, DS-05, PL-03, PL-04, PL-06, NG-01, BG-04, BG-05, DQ-01.</div>`;
+ return out}
+
+/* ===== T-31: Duyệt giảm giá (M6, FR-13; US-M6-01..04, BR-03) ===== */
+let DC=null;
+const dcSt=x=>x.at!=null&&x.at<=S.now?x.st:'cho_duyet'; /* kết quả chỉ hiện khi đã tới giờ xử lý */
+const DC_TAG={cho_duyet:['amb','Chờ duyệt'],da_duyet:['grn','Đã duyệt'],tu_choi:['red','Từ chối']};
+const WHO={tp:'Trưởng phòng KD',gd:'Giám đốc',lan:'Lan',hung:'Hùng',mai:'Mai'};
+const dcOf=did=>discounts.filter(x=>x.deal===did&&x.t<=S.now).sort((a,b)=>b.t-a.t);
+const dcPend=did=>dcOf(did).find(x=>dcSt(x)==='cho_duyet');
+const dcWait=()=>discounts.filter(x=>x.t<=S.now&&dcSt(x)==='cho_duyet').sort((a,b)=>a.t-b.t);
+const approverOf=x=>x.by==='tp'?'gd':'tp';
+const canApprove=()=>K()==='tp'||K()==='gd';
+const canDiscount=d=>(K()==='tp'||(K()==='nv'&&d.owner===S.role))&&(d.stage==='Báo giá'||d.stage==='Đàm phán');
+function dcBlock(d,c){
+ const hist=dcOf(d.id),open=d.stage==='Báo giá'||d.stage==='Đàm phán';
+ const rows=hist.map(x=>{const st=dcSt(x),t=DC_TAG[st];return `<div class="log" style="margin-bottom:6px;padding:8px 10px"><div class="lt"><b>${m1(x.pct)}%</b><span class="tag ${t[0]}">${t[1]}</span><small>${esc(WHO[x.by])} đề nghị lúc ${fmt(x.t)}</small></div><div style="font-size:13px">${esc(x.note)}</div>${st!=='cho_duyet'?`<small>${esc(WHO[x.who])} ${st==='da_duyet'?'duyệt':'từ chối'} lúc ${fmt(x.at)}${x.anote?' · '+esc(x.anote):''}</small>`:''}</div>`}).join('');
+ const btns=(canDiscount(d)?`<button class="btn sm" data-act="dcNew" data-deal="${d.id}">Đề nghị giảm giá</button>`:'')+(canSend(c)&&open?`<button class="btn sm pri" data-act="signDeal" data-deal="${d.id}">Chuyển Đã ký</button>`:'');
+ if(!hist.length&&!btns)return '';
+ return `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><b style="font-size:13px;flex:1">Giảm giá (${hist.length})</b>${btns}</div>${rows||'<div class="note" style="margin:0">Chưa có đề nghị giảm giá</div>'}</div>`}
+function dcOpen(did){
+ const d=deal(did),c=cust(d.cust);
+ if(d.stage!=='Báo giá'&&d.stage!=='Đàm phán'){toast('Chỉ đề nghị giảm giá khi deal ở “Báo giá” hoặc “Đàm phán”.',true);return}
+ if(!canDiscount(d)){toast('Bạn không phụ trách deal này nên không gửi được đề nghị.',true);return}
+ const p=dcPend(did);if(p){toast('Deal đã có đề nghị đang chờ duyệt ('+m1(p.pct)+'%). Chờ kết quả trước khi gửi đề nghị mới.',true);return}
+ DC={deal:did};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Đề nghị giảm giá</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(d.name)} · ${d.stage}${d.val!=null?' · '+vndS(d.val):''}</small></div>
+ <div class="fld"><label>Mức giảm (%) <i>*</i></label><input type="text" id="dcPct" placeholder="Ví dụ 12"><div class="hint">Chỉ cần duyệt khi lớn hơn ${NGUONG}% (BR-03).</div></div>
+ <div class="fld"><label>Lý do đề nghị <i>*</i></label><textarea id="dcNote" maxlength="255"></textarea></div>
+ <div class="err" id="dcErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="dcSend">Gửi đề nghị</button></div></div></div>`}
+function dcSend(){
+ const d=deal(DC.deal),err=m=>{document.getElementById('dcErr').textContent=m};
+ const raw=document.getElementById('dcPct').value.trim().replace(',','.'),note=document.getElementById('dcNote').value.trim(),v=Number(raw);
+ if(!raw||!isFinite(v)||v<=0||v>100)return err('Mức giảm phải là số lớn hơn '+NGUONG+' và không quá 100.');
+ if(v<=NGUONG)return err('Mức giảm '+m1(v)+'% không vượt ngưỡng '+NGUONG+'% nên không cần duyệt.');
+ if(!note)return err('Thiếu lý do đề nghị.');
+ if(dcPend(d.id))return err('Deal đã có đề nghị đang chờ duyệt.');
+ const by=S.role,to=approverOf({by});
+ discounts.push({id:'dc'+(discounts.length+1),deal:d.id,pct:Math.round(v*100)/100,by,t:S.now,note,st:'cho_duyet',who:null,at:null,anote:''});
+ notify(to,'Đề nghị giảm giá '+m1(v)+'% cho '+cust(d.cust).name+' · '+d.name+' từ '+WHO[by]+' đang chờ duyệt.',{page:'dc'});
+ closeModal();render();toast('Đã gửi đề nghị. '+WHO[to]+' nhận thông báo; deal hiển thị “Chờ duyệt giảm giá”.')}
+function dcApprove(id){
+ const x=discounts.find(y=>y.id===id);
+ if(!canApprove()){toast('Chỉ Trưởng phòng KD hoặc Giám đốc được duyệt.',true);return}
+ if(dcSt(x)!=='cho_duyet'){toast('Đề nghị đã được xử lý bởi '+WHO[x.who]+' lúc '+fmt(x.at)+'.',true);render();return}
+ if(x.by===S.role){toast('Không được tự duyệt đề nghị của chính mình; đề nghị này chỉ '+WHO[approverOf(x)]+' duyệt.',true);return}
+ x.st='da_duyet';x.who=S.role;x.at=S.now;
+ notify(x.by,'Đề nghị giảm giá '+m1(x.pct)+'% cho '+cust(deal(x.deal).cust).name+' đã được '+WHO[S.role]+' duyệt.',{cust:deal(x.deal).cust});
+ render();toast('Đã duyệt. '+WHO[x.by]+' nhận thông báo.')}
+function dcRejOpen(id){
+ const x=discounts.find(y=>y.id===id),d=deal(x.deal);
+ if(!canApprove()){toast('Chỉ Trưởng phòng KD hoặc Giám đốc được từ chối.',true);return}
+ if(dcSt(x)!=='cho_duyet'){toast('Đề nghị đã được xử lý bởi '+WHO[x.who]+' lúc '+fmt(x.at)+'.',true);render();return}
+ if(x.by===S.role){toast('Không được tự xử lý đề nghị của chính mình; đề nghị này chỉ '+WHO[approverOf(x)]+' xử lý.',true);return}
+ DC={id};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Từ chối đề nghị giảm giá</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(cust(d.cust).name)}</b><br><small>${esc(d.name)} · đề nghị ${m1(x.pct)}% bởi ${esc(WHO[x.by])}</small></div>
+ <div class="fld"><label>Lý do từ chối <i>*</i></label><textarea id="dcRej" maxlength="255"></textarea></div><div class="err" id="dcErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="dcRej">Từ chối</button></div></div></div>`}
+function dcRej(){
+ const x=discounts.find(y=>y.id===DC.id),n=document.getElementById('dcRej').value.trim();
+ if(!n){document.getElementById('dcErr').textContent='Cần nhập lý do từ chối.';return}
+ if(dcSt(x)!=='cho_duyet'){closeModal();toast('Đề nghị đã được xử lý bởi '+WHO[x.who]+'.',true);render();return}
+ x.st='tu_choi';x.who=S.role;x.at=S.now;x.anote=n;
+ notify(x.by,'Đề nghị giảm giá '+m1(x.pct)+'% cho '+cust(deal(x.deal).cust).name+' bị '+WHO[S.role]+' từ chối: '+n,{cust:deal(x.deal).cust});
+ closeModal();render();toast('Đã từ chối. '+WHO[x.by]+' nhận thông báo kèm lý do.')}
+function signDeal(did){
+ const d=deal(did),c=cust(d.cust);
+ if(!canSend(c)){toast('Bạn không phụ trách deal này.',true);return}
+ const p=dcPend(did);if(p){toast('Deal còn đề nghị giảm giá '+m1(p.pct)+'% đang chờ duyệt, chưa chuyển “Đã ký” được.',true);return}
+ DC={sign:did};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Chuyển “Đã ký”</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(d.name)} · ${d.stage}${d.val!=null?' · '+vndS(d.val):''}</small></div>
+ <div class="fld"><label>Mức giảm giá áp dụng (%) <i>*</i></label><input type="text" id="signPct" value="0"><div class="hint">Nhập 0 nếu không giảm. Lớn hơn ${NGUONG}% thì cần đề nghị đã duyệt với mức không thấp hơn (BR-03).</div></div>
+ <div class="err" id="dcErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="signConfirm">Chuyển Đã ký</button></div></div></div>`}
+function signConfirm(){
+ const did=DC.sign,d=deal(did),err=m=>{document.getElementById('dcErr').textContent=m};
+ const raw=document.getElementById('signPct').value.trim().replace(',','.'),v=Number(raw);
+ if(!raw||!isFinite(v)||v<0||v>100)return err('Mức giảm áp dụng là bắt buộc, là số từ 0 đến 100.');
+ if(dcPend(did))return err('Deal còn đề nghị giảm giá đang chờ duyệt.');
+ if(v>NGUONG){const ok=dcOf(did).some(x=>dcSt(x)==='da_duyet'&&x.pct>=v);
+  if(!ok)return err('Mức giảm áp dụng '+m1(v)+'% vượt ngưỡng '+NGUONG+'% nên cần đề nghị đã duyệt với mức không thấp hơn '+m1(v)+'%.')}
+ dealHist.push({deal:did,from:d.stage,to:'Đã ký',t:S.now,by:R().short});
+ d.stage='Đã ký';d.signedAt=S.now;d.pay='Chưa thanh toán';d.payHist=[];d.disc=v;
+ closeModal();render();toast('Deal đã chuyển “Đã ký”, mức giảm áp dụng '+m1(v)+'%. Có thể gửi form bàn giao.')}
+function viewDc(){
+ if(!canApprove())return '<div class="sec"><div class="empty">Chỉ Trưởng phòng KD và Giám đốc xem hàng chờ duyệt giảm giá. Nhân viên KD xem đề nghị của mình ở mục Giảm giá của deal trong hồ sơ khách.</div></div>';
+ const all=discounts.filter(x=>x.t<=S.now),wait=dcWait(),done=all.filter(x=>dcSt(x)!=='cho_duyet').sort((a,b)=>b.at-a.at);
+ const list=S.dcTab==='wait'?wait:done;
+ const tabs=[['wait','Chờ duyệt ('+wait.length+')'],['done','Đã xử lý ('+done.length+')']].map(t=>`<button class="tab ${S.dcTab===t[0]?'on':''}" data-act="dcTab" data-t="${t[0]}">${t[1]}</button>`).join('');
+ const row=x=>{const d=deal(x.deal),st=dcSt(x),t=DC_TAG[st],self=x.by===S.role;
+  const act=st==='cho_duyet'?(self?`<small style="color:var(--mut)">Chỉ ${WHO[approverOf(x)]} duyệt</small>`:`<div class="acts"><button class="btn sm pri" data-act="dcOk" data-id="${x.id}">Duyệt</button><button class="btn sm" data-act="dcRejOpen" data-id="${x.id}">Từ chối</button></div>`):`<small>${esc(WHO[x.who])} · ${fmt(x.at)}${x.anote?'<br>'+esc(x.anote):''}</small>`;
+  return `<tr><td><b>${esc(cust(d.cust).name)}</b><br><small style="color:var(--mut)">${esc(d.name)}</small></td><td>${d.val==null?'<span class="tag amb">Chưa có</span>':vndS(d.val)}</td><td><b>${m1(x.pct)}%</b></td><td>${esc(WHO[x.by])}</td><td style="max-width:220px">${esc(x.note)}</td><td>${fmt(x.t)}</td><td>${st==='cho_duyet'?dur(S.now-x.t):'<span class="tag '+t[0]+'">'+t[1]+'</span>'}</td><td>${act}</td></tr>`};
+ return `<div class="banner info">${K()==='gd'?'Giám đốc duyệt song song với Trưởng phòng KD, đặc biệt khi Trưởng phòng KD vắng hoặc là người đề nghị (US-M6-04).':'Duyệt hoặc từ chối đề nghị giảm giá trên '+NGUONG+'% (BR-03). Không tự duyệt đề nghị của chính mình.'}</div>
+ <div class="tabs">${tabs}</div>
+ <div class="sec">${list.length?`<table><tr><th>Khách hàng / Deal</th><th>Giá trị deal</th><th>Mức giảm</th><th>Người đề nghị</th><th>Lý do</th><th>Gửi lúc</th><th>${S.dcTab==='wait'?'Đã chờ':'Kết quả'}</th><th></th></tr>${list.map(row).join('')}</table>`:`<div class="empty">${S.dcTab==='wait'?'Không có đề nghị chờ duyệt':'Chưa có đề nghị nào được xử lý'}</div>`}</div>
+ <div class="legend">Đề nghị chỉ tạo khi mức giảm lớn hơn ${NGUONG}%. Kết quả đã ghi thì khóa, giữ làm lịch sử duyệt. BRD chưa có thời hạn duyệt nên hệ thống chỉ hiển thị thời gian đã chờ, không cảnh báo quá hạn. Đổi vai trò (Lan, Hùng, Trưởng phòng KD, Giám đốc) và giờ demo để thử.</div>`}
+
+/* ===== T-35: sửa lỗi D-01..D-06 và bổ sung chức năng theo khoảng trống G-02..G-08 của T-34 ===== */
+/* Menu theo vai trò (D-05): khớp ma trận phân quyền T-32 */
+const NAVS={gd:['cust','lead','ho','dc','rp'],tp:['cust','today','lead','ho','dc','rp'],nv:['cust','today','lead','ho','rp'],mkt:['lead','rp'],kt:['cust','ho','rp'],ktoan:['cust','rp'],cskh:['cust','today']};
+const navOk=p=>(NAVS[K()]||[]).includes(p);
+const SOURCES=['Facebook Ads','Google Ads','Zalo OA','Webinar','Hotline','Giới thiệu','Chưa xác định'];
+const ownerName=c=>c.owner?ROLES[c.owner].short:'Chưa phân bổ';
+const fmtDay=di=>DAYS[di%7]+(di>=7?' (tuần này)':' (tuần trước)');
+const normName=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim();
+const digits=s=>String(s||'').replace(/\D/g,'');
+const taxNorm=s=>String(s||'').replace(/\s+/g,'');
+const taxOf=cid=>(INV[cid]||{}).tax||'';
+const taxErr=v=>{if(!v)return '';if(!/^[0-9-]+$/.test(v)||(v.match(/-/g)||[]).length>1)return 'Mã số thuế chỉ gồm chữ số và một dấu gạch.';if(!/^\d{10}(-\d{3})?$/.test(v))return 'Mã số thuế phải gồm 10 chữ số, hoặc 13 chữ số dạng 0101234567-001.';return ''};
+const dupTax=(v,except)=>v?custs.find(c=>c.id!==except&&taxOf(c.id)===v):null;
+const dupName=n=>custs.find(c=>normName(c.name)===normName(n));
+const nextId=(p,arr)=>p+(Math.max(0,...arr.map(x=>Number(String(x.id).replace(/\D/g,''))||0))+1);
+const goCust=id=>{S.page='cust';if(canSeeCust(cust(id))){S.drawer=id;S.drawerDeal='';S.tlN=20}render()};
+
+/* Dựng trường form dùng chung: p = tiền tố, k = khóa trường */
+const fld=(p,k,label,inner,req,hint)=>`<div class="fld" id="${p}fld-${k}"><label>${label}${req?' <i>*</i>':''}</label>${inner}<div class="ferr" id="${p}err-${k}"></div>${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+const inp=(p,k,val,ex)=>`<input type="text" id="${p}in-${k}" value="${esc(val||'')}" ${ex||''}>`;
+function showFE(p,L,e,title){
+ Object.keys(L).forEach(k=>{const w=document.getElementById(p+'fld-'+k),m=document.getElementById(p+'err-'+k);if(w)w.classList.toggle('bad',!!e[k]);if(m)m.textContent=e[k]||''});
+ const ks=Object.keys(e),s=document.getElementById(p+'Sum');
+ if(s)s.innerHTML=ks.length?`<div class="errsum"><b>${title||'Chưa lưu được.'}</b> ${ks.length} trường cần bổ sung hoặc sửa:<ul>${ks.map(k=>`<li><b>${L[k]}</b>: ${e[k]}</li>`).join('')}</ul></div>`:'';
+ if(ks.length){const first=Object.keys(L).find(k=>e[k]),f=document.getElementById(p+'in-'+first);if(f)f.focus()}}
+function mkCust(v){const c={id:nextId('c',custs),name:v.name,contact:v.contact,phone:fmtPhone(v.phoneN),owner:v.owner,stage:'Đang chăm sóc',src:v.src,createdAt:S.now,createdBy:R().short};custs.push(c);HQ[c.id]='';if(v.tax)INV[c.id]={legal:'',tax:v.tax,addr:'',email:''};return c}
+
+/* ===== G-04: Tạo hồ sơ khách, chặn trùng MST, cảnh báo trùng tên (US-M1-01, US-M1-02) ===== */
+let CF=null;
+const CF_L={name:'Tên công ty',contact:'Người liên hệ',phone:'Số điện thoại',src:'Nguồn',tax:'Mã số thuế'};
+function cfOpen(){
+ if(K()!=='tp'&&K()!=='nv'){toast('Bạn không có quyền tạo hồ sơ khách.',true);return}
+ CF={};
+ const own=K()==='tp'?fld('cf','owner','Người phụ trách',`<select id="cfin-owner">${Object.keys(EMP).filter(e=>EMP[e].active).map(e=>`<option value="${e}">${EMP[e].name}</option>`).join('')}</select>`,true):`<div class="fld"><label>Người phụ trách</label><div class="fixed">${esc(R().short)} (người tạo hồ sơ)</div></div>`;
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md wide"><div class="mh"><b>Tạo hồ sơ khách</b><button class="x" data-act="closeModal">×</button></div><div class="mb"><div id="cfSum"></div><div id="cfWarn"></div>
+ ${fld('cf','name','Tên công ty',inp('cf','name','','maxlength="200"'),true)}
+ ${fld('cf','contact','Người liên hệ',inp('cf','contact','','maxlength="100"'),true)}
+ ${fld('cf','phone','Số điện thoại',inp('cf','phone','','inputmode="tel" placeholder="0912 345 678"'),true,'10 hoặc 11 chữ số, bắt đầu bằng 0.')}
+ ${fld('cf','src','Nguồn',`<select id="cfin-src"><option value="">Chọn nguồn…</option>${SOURCES.map(s=>`<option>${s}</option>`).join('')}</select>`,true)}
+ ${fld('cf','tax','Mã số thuế (không bắt buộc)',inp('cf','tax','','maxlength="14"'),false,'10 chữ số, hoặc 13 chữ số dạng 0101234567-001. Trùng mã số thuế thì hệ thống không tạo hồ sơ mới.')}
+ ${own}</div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="cfSave">Lưu hồ sơ</button></div></div></div>`}
+function cfSave(force){
+ if(K()!=='tp'&&K()!=='nv'){toast('Bạn không có quyền tạo hồ sơ khách.',true);return}
+ const v={name:hv('cfin-name').trim().replace(/\s+/g,' '),contact:hv('cfin-contact').trim(),phone:hv('cfin-phone').trim(),src:hv('cfin-src'),tax:taxNorm(hv('cfin-tax')),owner:K()==='tp'?hv('cfin-owner'):S.role},e={};
+ if(!v.name)e.name='Chưa nhập tên công ty.';else if(v.name.length>200)e.name='Tên công ty tối đa 200 ký tự.';
+ if(!v.contact)e.contact='Chưa nhập người liên hệ.';
+ if(!v.phone)e.phone='Chưa nhập số điện thoại.';else{v.phoneN=normPhone(v.phone);if(v.phoneN===null||!/^0\d{9,10}$/.test(v.phoneN))e.phone='Số điện thoại không hợp lệ (10 hoặc 11 chữ số, bắt đầu bằng 0).'}
+ if(!v.src)e.src='Chưa chọn nguồn.';
+ const te=taxErr(v.tax);if(te)e.tax=te;else{const dt=dupTax(v.tax);if(dt)e.tax='Mã số thuế đã có ở hồ sơ “'+dt.name+'”, người phụ trách '+ownerName(dt)+'. Hệ thống không tạo hồ sơ mới; hai bên cần phối hợp.'}
+ showFE('cf',CF_L,e,'Chưa lưu được.');document.getElementById('cfWarn').innerHTML='';
+ if(Object.keys(e).length)return;
+ const dn=dupName(v.name);
+ if(dn&&!force){document.getElementById('cfWarn').innerHTML=`<div class="banner warn"><b>Cảnh báo trùng tên.</b> Đã có hồ sơ “${esc(dn.name)}”, người phụ trách ${esc(ownerName(dn))}. Hai công ty khác nhau có thể cùng tên nên hệ thống chỉ cảnh báo.<div style="margin-top:8px;display:flex;gap:8px">${canSeeCust(dn)?`<button class="btn sm" data-act="cfOpenDup" data-id="${dn.id}">Mở hồ sơ đã có</button>`:''}<button class="btn sm pri" data-act="cfForce">Vẫn tạo hồ sơ mới</button></div></div>`;return}
+ const c=mkCust(v);closeModal();S.page='cust';render();
+ toast('Đã tạo hồ sơ “'+esc(c.name)+'”. Người phụ trách: '+esc(ownerName(c))+'.')}
+
+/* ===== G-05: Nhập khách từ Google Sheet (bản xuất .csv; US-M1-04) ===== */
+let IM=null;
+const IM_COLS={name:'tên công ty',contact:'người liên hệ',phone:'số điện thoại',src:'nguồn',tax:'mã số thuế',owner:'người phụ trách'};
+const IM_L={name:'Tên công ty',contact:'Người liên hệ',phone:'Số điện thoại'};
+const IM_SAMPLE='Tên công ty,Người liên hệ,Số điện thoại,Nguồn,Mã số thuế,Người phụ trách\nCông ty TNHH Bình Minh,Chị Thảo,0912 300 001,Facebook Ads,0104567890,Lan\nCửa hàng Hoa Nắng,Anh Khải,0912 300 002,Zalo OA,,Hùng\nXưởng gỗ Đại Phát,Anh Lộc,0912 300 003,,,\nCông ty Thiếu SĐT,Chị Mai,,Hotline,,Mai\nCông ty TNHH An Phát,Chị Hạnh,0901 111 001,Hotline,0101234567,Lan\ncửa hàng  minh châu ,Anh Tuấn,0901 111 002,Hotline,,Lan';
+function parseCSV(t){
+ const rows=[],sep=(t.split('\n')[0]||'').includes('\t')?'\t':',';let r=[],f='',q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+  else if(ch==='"')q=true;
+  else if(ch===sep){r.push(f);f=''}
+  else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;r.push(f);f='';if(r.some(x=>x.trim()!==''))rows.push(r);r=[]}
+  else f+=ch}
+ r.push(f);if(r.some(x=>x.trim()!==''))rows.push(r);return rows}
+function imOpen(){
+ if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được nhập khách từ Google Sheet.',true);return}
+ IM={};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md wide"><div class="mh"><b>Nhập khách từ Google Sheet</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="banner info">Dùng bản xuất .csv của Google Sheet (Tệp, Tải xuống, CSV). Prototype chưa đọc file .xlsx. Cột bắt buộc: Tên công ty, Người liên hệ, Số điện thoại. Cột tùy chọn: Nguồn, Mã số thuế, Người phụ trách.</div>
+ <div class="fld"><label>Chọn file .csv</label><input type="file" id="imFile" data-chg="imFile" accept=".csv,.txt"></div>
+ <div class="fld"><label>Hoặc dán nội dung <button class="btn sm" style="margin-left:8px" data-act="imSample">Điền dữ liệu mẫu</button></label><textarea id="imText" style="min-height:130px;font-family:ui-monospace,Consolas,monospace;font-size:12px" placeholder="Tên công ty,Người liên hệ,Số điện thoại,..."></textarea><div class="hint">Dữ liệu mẫu là giả định, không phải dữ liệu thật.</div></div>
+ <div id="imRes"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Đóng</button><button class="btn pri" data-act="imRun">Nhập</button></div></div></div>`}
+function imRun(){
+ if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được nhập khách từ Google Sheet.',true);return}
+ const res=document.getElementById('imRes'),rows=parseCSV(hv('imText'));
+ if(!rows.length){res.innerHTML='<div class="errsum">Chưa có nội dung để nhập. Chọn file .csv hoặc dán nội dung.</div>';return}
+ const head=rows[0].map(normName),idx={};
+ Object.keys(IM_COLS).forEach(k=>{idx[k]=head.indexOf(IM_COLS[k])});
+ const miss=['name','contact','phone'].filter(k=>idx[k]<0);
+ if(miss.length){res.innerHTML=`<div class="errsum"><b>Không nhập dòng nào.</b> File thiếu cột bắt buộc: ${miss.map(k=>'“'+IM_L[k]+'”').join(', ')}.</div>`;return}
+ const get=(r,k)=>idx[k]<0?'':String(r[idx[k]]||'').trim();
+ const okc=[],errs=[],dups=[],seenT=new Set(),seenN=new Set();
+ rows.slice(1).forEach((r,i)=>{const no=i+2,v={name:get(r,'name').replace(/\s+/g,' '),contact:get(r,'contact'),phone:get(r,'phone'),src:get(r,'src'),tax:taxNorm(get(r,'tax')),ow:get(r,'owner')},why=[];
+  if(!v.name)why.push('thiếu tên công ty');if(!v.contact)why.push('thiếu người liên hệ');
+  if(!v.phone)why.push('thiếu số điện thoại');else{v.phoneN=normPhone(v.phone);if(v.phoneN===null||!/^0\d{9,10}$/.test(v.phoneN))why.push('số điện thoại sai định dạng')}
+  if(taxErr(v.tax))why.push('mã số thuế sai định dạng');
+  if(why.length){errs.push({no,name:v.name,why:why.join('; ')});return}
+  const ex=dupTax(v.tax)||dupName(v.name);
+  if(ex){dups.push({no,name:v.name,ref:'hồ sơ “'+ex.name+'”'});return}
+  if((v.tax&&seenT.has(v.tax))||seenN.has(normName(v.name))){dups.push({no,name:v.name,ref:'dòng trước trong file'});return}
+  if(v.tax)seenT.add(v.tax);seenN.add(normName(v.name));
+  v.src=SOURCES.includes(v.src)?v.src:'Chưa xác định';
+  v.owner=Object.keys(EMP).find(e=>EMP[e].active&&normName(EMP[e].name)===normName(v.ow))||'';
+  okc.push(mkCust(v))});
+ const un=okc.filter(c=>!c.owner).length;
+ const tbl=(h,a)=>a.length?`<table style="margin-top:6px"><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${a.map(x=>`<tr><td>Dòng ${x.no}</td><td>${esc(x.name||'(trống)')}</td><td>${esc(x.why||x.ref)}</td></tr>`).join('')}</table>`:'';
+ res.innerHTML=`<div class="sum"><b>${okc.length} thành công, ${errs.length} lỗi, ${dups.length} trùng bị bỏ qua.</b>${un?'<br>'+un+' hồ sơ chưa có người phụ trách (để trạng thái chưa phân bổ).':''}</div>
+ ${errs.length?'<b style="font-size:13px">Dòng lỗi (không nhập)</b>'+tbl(['Dòng','Công ty','Lý do'],errs):''}
+ ${dups.length?'<b style="font-size:13px">Dòng trùng (bỏ qua, giữ hồ sơ cũ)</b>'+tbl(['Dòng','Công ty','Trùng với'],dups):''}`;
+ render();toast('Đã nhập: '+okc.length+' thành công, '+errs.length+' lỗi, '+dups.length+' trùng.')}
+
+
+/* ===== G-01: Nhập lead từ file .csv (Marketing, Trưởng phòng KD; US-M2-05, A-50) ===== */
+let LI=null,lidN=0;
+const LI_SAMPLE='Tên người liên hệ,Số điện thoại,Công ty,Nguồn,Chiến dịch\nTrần Minh Tuấn,0912 400 001,Cty Minh Tuấn,Facebook Ads,Khai trương T11\nLê Thị Hoa,0912 400 002,Spa Hoa Mai,Facebook Ads,Khai trương T11\nPhạm Quốc Việt,0912 400 003,,,\nNguyễn Thị Lan,,Cửa hàng Lan Anh,Zalo OA,Giới thiệu\nĐặng Văn Hùng,0912 000 101,Cty Bảo Long,Google Ads,Từ khóa CRM\nVõ Thanh Sơn,0912 400 001,Cty Minh Tuấn 2,Facebook Ads,Khai trương T11';
+function canImportLead(){return K()==='mkt'||K()==='tp'}
+function liOpen(){
+ if(!canImportLead()){toast('Chỉ Marketing và Trưởng phòng KD được nhập lead từ file.',true);return}
+ LI={};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md wide"><div class="mh"><b>Nhập lead từ file</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="banner info">Dùng file .csv (prototype chưa đọc .xlsx). Cột bắt buộc: Tên người liên hệ, Số điện thoại. Cột tùy chọn: Công ty, Nguồn, Chiến dịch (để trống thì ghi “Chưa xác định”). Số điện thoại trùng lead đang ở trạng thái Mới hoặc trùng dòng trước trong file thì bị bỏ qua.</div>
+ <div class="fld"><label>Chọn file .csv</label><input type="file" id="liFile" data-chg="liFile" accept=".csv,.txt"></div>
+ <div class="fld"><label>Hoặc dán nội dung <button class="btn sm" style="margin-left:8px" data-act="liSample">Điền dữ liệu mẫu</button></label><textarea id="liText" style="min-height:130px;font-family:ui-monospace,Consolas,monospace;font-size:12px" placeholder="Tên người liên hệ,Số điện thoại,Công ty,Nguồn,Chiến dịch"></textarea><div class="hint">Dữ liệu mẫu là giả định, không phải dữ liệu thật.</div></div>
+ <div id="liRes"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Đóng</button><button class="btn pri" data-act="liRun">Nhập</button></div></div></div>`}
+function liRun(){
+ if(!canImportLead()){toast('Chỉ Marketing và Trưởng phòng KD được nhập lead từ file.',true);return}
+ const res=document.getElementById('liRes'),rows=parseCSV(hv('liText'));
+ if(!rows.length){res.innerHTML='<div class="errsum">Chưa có nội dung để nhập. Chọn file .csv hoặc dán nội dung.</div>';return}
+ const C={name:'tên người liên hệ',phone:'số điện thoại',co:'công ty',src:'nguồn',camp:'chiến dịch'};
+ const head=rows[0].map(normName),idx={};
+ Object.keys(C).forEach(k=>{idx[k]=head.indexOf(C[k])});
+ const miss=['name','phone'].filter(k=>idx[k]<0);
+ if(miss.length){res.innerHTML=`<div class="errsum"><b>Không nhập dòng nào.</b> File thiếu cột bắt buộc: ${miss.map(k=>'“'+(k==='name'?'Tên người liên hệ':'Số điện thoại')+'”').join(', ')}.</div>`;return}
+ const get=(r,k)=>idx[k]<0?'':String(r[idx[k]]||'').trim();
+ const okl=[],errs=[],dups=[],seen=new Set();
+ rows.slice(1).forEach((r,i)=>{const no=i+2,name=get(r,'name').replace(/\s+/g,' '),ph=get(r,'phone'),why=[];
+  if(!name)why.push('thiếu tên người liên hệ');
+  let pn='';
+  if(!ph)why.push('thiếu số điện thoại');else{pn=normPhone(ph);if(pn===null||!/^0\d{9,10}$/.test(pn))why.push('số điện thoại sai định dạng')}
+  if(why.length){errs.push({no,name,why:why.join('; ')});return}
+  const ex=leads.find(l=>l.st==='Mới'&&digits(l.phone)===pn);
+  if(ex){dups.push({no,name,ref:'lead “'+ex.name+'” đang chờ phân bổ'});return}
+  if(seen.has(pn)){dups.push({no,name,ref:'dòng trước trong file'});return}
+  seen.add(pn);
+  const src=get(r,'src'),camp=get(r,'camp');
+  okl.push({id:'li'+(++lidN),name,co:get(r,'co')||'Chưa xác định',phone:ph.replace(/\s+/g,' '),src:SOURCES.includes(src)?src:'Chưa xác định',camp:camp||'Chưa xác định',t:S.now,st:'Mới',imp:true})});
+ okl.forEach(l=>leads.push(l));
+ if(okl.length)notify('tp','Có '+okl.length+' lead mới từ file chờ phân bổ.',{page:'lead'});
+ const tbl=(h,a)=>a.length?`<table style="margin-top:6px"><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${a.map(x=>`<tr><td>Dòng ${x.no}</td><td>${esc(x.name||'(trống)')}</td><td>${esc(x.why||x.ref)}</td></tr>`).join('')}</table>`:'';
+ res.innerHTML=`<div class="sum"><b>${okl.length} thành công, ${errs.length} lỗi, ${dups.length} trùng bị bỏ qua.</b>${okl.length?'<br>Lead mới vào hàng chờ phân bổ của Trưởng phòng KD, Trưởng phòng KD nhận thông báo.':''}</div>
+ ${errs.length?'<b style="font-size:13px">Dòng lỗi (không nhập)</b>'+tbl(['Dòng','Người liên hệ','Lý do'],errs):''}
+ ${dups.length?'<b style="font-size:13px">Dòng trùng (bỏ qua)</b>'+tbl(['Dòng','Người liên hệ','Trùng với'],dups):''}`;
+ render();toast('Đã nhập lead: '+okl.length+' thành công, '+errs.length+' lỗi, '+dups.length+' trùng.')}
+
+/* ===== G-02: Chuyển lead thành khách và deal, giữ nguồn (US-M2-06) ===== */
+let LC=null;
+function convertLead(id){
+ const l=leads.find(x=>x.id===id);
+ if(l.st==='Đã chuyển deal'){const d=deal(l.deal);toast('Lead đã được chuyển thành deal “'+esc(d.name)+'”, không chuyển lại được. Mở hồ sơ khách đã tạo.',true);goCust(d.cust);return}
+ if(l.st!=='Đã phân bổ'){toast('Chỉ chuyển lead đã được phân bổ.',true);return}
+ if(!(K()==='tp'||(K()==='nv'&&l.owner===S.role))){toast('Chỉ người phụ trách lead hoặc Trưởng phòng KD được chuyển lead.',true);return}
+ const dup=custs.find(c=>normName(c.name)===normName(l.co)||digits(c.phone)===digits(l.phone));
+ if(dup){LC={id,dup:dup.id};
+  document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Cảnh báo trùng khách</b><button class="x" data-act="closeModal">×</button></div><div class="mb"><div class="banner warn">Đã có hồ sơ khách <b>${esc(dup.name)}</b> (phụ trách ${esc(ownerName(dup))}) trùng tên hoặc số điện thoại với lead <b>${esc(l.co)}</b>. Gắn lead vào hồ sơ đã có hay tạo hồ sơ mới?</div></div>
+  <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn" data-act="lcNew">Tạo hồ sơ mới</button><button class="btn pri" data-act="lcAttach">Gắn vào hồ sơ đã có</button></div></div></div>`;return}
+ doConvert(id,null)}
+function doConvert(id,attachTo){
+ const l=leads.find(x=>x.id===id);
+ if(l.st!=='Đã phân bổ'||!(K()==='tp'||(K()==='nv'&&l.owner===S.role)))return;
+ const c=attachTo?cust(attachTo):mkCust({name:l.co,contact:l.name,phone:l.phone,phoneN:digits(l.phone),owner:l.owner,src:l.src,tax:''});
+ const d={id:nextId('d',deals),cust:c.id,name:'Cơ hội từ lead '+l.name,stage:'Liên hệ',owner:attachTo?(c.owner||l.owner):l.owner,val:null,created:S.now,src:l.src,lead:l.id};
+ deals.push(d);l.st='Đã chuyển deal';l.deal=d.id;closeModal();
+ toast('Đã chuyển lead thành '+(attachTo?'deal gắn vào hồ sơ “'+esc(c.name)+'”':'khách và deal')+' ở “Liên hệ”. Nguồn '+esc(l.src)+', chiến dịch '+esc(l.camp)+' được giữ nguyên.');
+ goCust(c.id)}
+
+/* ===== G-03: Đổi giai đoạn deal, ghi lý do khi Thua (US-M3-01, US-M3-03) ===== */
+let SG=null;
+const canStage=d=>(K()==='tp'||(K()==='nv'&&d.owner===S.role))&&STG.includes(d.stage);
+function stageOpen(did){
+ const d=deal(did),c=cust(d.cust);
+ if(d.stage==='Đã ký'){toast('Deal đã “Đã ký”, không chuyển lùi về giai đoạn trước được.',true);return}
+ if(d.stage==='Thua'){toast('Deal đã “Thua”, không đổi giai đoạn được.',true);return}
+ if(!(K()==='tp'||(K()==='nv'&&d.owner===S.role))){toast('Chỉ người phụ trách deal hoặc Trưởng phòng KD được đổi giai đoạn.',true);return}
+ SG={deal:did};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Đổi giai đoạn deal</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(d.name)} · đang ở “${d.stage}”</small></div>
+ <div class="fld"><label>Giai đoạn mới <i>*</i></label><select id="sgTo" data-chg="sgTo"><option value="">Chọn giai đoạn…</option>${[...STG,'Thua'].map(s=>`<option>${s}</option>`).join('')}</select><div class="hint">Chuyển “Đã ký” dùng nút “Chuyển Đã ký” vì cần ghi mức giảm giá áp dụng.</div></div>
+ <div id="sgLost" style="display:none"><div class="fld"><label>Lý do mất hợp đồng <i>*</i></label><select id="sgReason"><option value="">Chọn lý do…</option>${LOST_REASONS.map(r=>`<option>${r}</option>`).join('')}</select></div>
+ <div class="fld"><label>Ghi chú (bắt buộc khi chọn “Khác”)</label><textarea id="sgNote" maxlength="255"></textarea></div></div>
+ <div class="err" id="sgErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="stageSave">Lưu</button></div></div></div>`}
+function stageSave(){
+ const d=deal(SG.deal),err=m=>{document.getElementById('sgErr').textContent=m};
+ if(!(K()==='tp'||(K()==='nv'&&d.owner===S.role)))return err('Chỉ người phụ trách deal hoặc Trưởng phòng KD được đổi giai đoạn.');
+ if(d.stage==='Đã ký')return err('Deal đã “Đã ký”, không chuyển lùi được.');
+ const to=hv('sgTo');if(!to)return err('Chưa chọn giai đoạn mới.');
+ if(to===d.stage)return err('Deal đang ở “'+to+'”.');
+ if(to==='Thua'){const r=hv('sgReason'),n=hv('sgNote').trim();
+  if(!r)return err('Lý do mất hợp đồng là bắt buộc.');
+  if(r==='Khác'&&!n)return err('Lý do “Khác” bắt buộc nhập ghi chú.');
+  Object.assign(d,{lostAt:S.now,lostReason:r,lostNote:n,lostBy:R().short})}
+ const from=d.stage;dealHist.push({deal:d.id,from,to,t:S.now,by:R().short});d.stage=to;
+ closeModal();render();toast('Đã đổi giai đoạn “'+esc(d.name)+'”: '+from+' → '+to+(to==='Thua'?' (lý do: '+esc(d.lostReason)+').':'. Hệ thống ghi người đổi và thời điểm.'))}
+
+/* ===== G-06: Cập nhật trạng thái triển khai, nghiệm thu, thông báo (US-M5-05, US-M5-06, US-M5-07) ===== */
+let DL=null;
+const DEL_ALL=['Chờ nhận bàn giao','Đã nhận bàn giao','Đang khảo sát','Đang lắp đặt','Đã nghiệm thu'];
+function delOpen(id){
+ const f=handoffs.find(x=>x.id===id),c=cust(f.cust),d=deal(f.deal);
+ if(K()!=='kt'){toast('Chỉ Kỹ thuật được cập nhật trạng thái triển khai.',true);return}
+ if(f.state!=='recv'){toast('Form bàn giao chưa ở “Đã nhận”. Bấm “Đã nhận” trước khi cập nhật triển khai.',true);return}
+ DL={id};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Cập nhật trạng thái triển khai</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(d.name)} · hiện là “${esc(f.dstate)}”</small></div>
+ <div class="fld"><label>Trạng thái mới <i>*</i></label><select id="dlTo" data-chg="dlTo"><option value="">Chọn trạng thái…</option>${DEL_ALL.map(s=>`<option>${s}</option>`).join('')}</select><div class="hint">Chỉ chuyển sang bước kế tiếp, không nhảy bước và không lùi.</div></div>
+ <div class="fld" id="dlDayW" style="display:none"><label>Ngày nghiệm thu <i>*</i></label><select id="dlDay"><option value="">Chưa chọn</option>${[-2,-1,0,1].map(o=>`<option value="${o}">${o===0?'Hôm nay':o===1?'Ngày mai (sau hôm nay)':o===-1?'Hôm qua':'2 ngày trước'} · ${fmtDay(dayIdx(S.now)+o)}</option>`).join('')}</select></div>
+ <div class="fld"><label>Ghi chú (không bắt buộc)</label><textarea id="dlNote" maxlength="500"></textarea></div>
+ <div class="err" id="dlErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="delSave">Lưu</button></div></div></div>`}
+function delSave(){
+ const f=handoffs.find(x=>x.id===DL.id),err=m=>{document.getElementById('dlErr').textContent=m};
+ if(K()!=='kt')return err('Chỉ Kỹ thuật được cập nhật trạng thái triển khai.');
+ if(f.state!=='recv')return err('Form bàn giao chưa “Đã nhận”. Bấm “Đã nhận” trước.');
+ const to=hv('dlTo');if(!to)return err('Chưa chọn trạng thái mới.');
+ const cur=DEL_ALL.indexOf(f.dstate),nx=DEL_ALL.indexOf(to);
+ if(nx===cur)return err('Khách đang ở “'+to+'”.');
+ if(nx<cur)return err('Trạng thái triển khai không lùi được (đang ở “'+f.dstate+'”).');
+ if(nx>cur+1)return err('Chỉ chuyển sang bước kế tiếp: “'+DEL_ALL[cur+1]+'”. Không nhảy bước.');
+ let day=null;
+ if(to==='Đã nghiệm thu'){const o=hv('dlDay');if(o==='')return err('Ngày nghiệm thu là bắt buộc.');if(Number(o)>0)return err('Ngày nghiệm thu không được sau hôm nay.');day=dayIdx(S.now)+Number(o)}
+ const note=hv('dlNote').trim(),c=cust(f.cust),d=deal(f.deal);
+ f.dstate=to;f.dhist.push({t:S.now,by:R().short,to,note,day});if(day!=null)f.acceptDay=day;
+ if(to==='Đã nghiệm thu'){const tx='Đã nghiệm thu: '+c.name+' · '+d.name+', ngày nghiệm thu '+fmtDay(day)+'. Thanh toán hiện tại: '+d.pay+'.';notify('ktoan',tx,{cust:c.id});notify('cskh',tx,{cust:c.id})}
+ closeModal();render();
+ toast('Đã cập nhật triển khai: “'+esc(to)+'”, ghi người cập nhật và thời điểm.'+(to==='Đã nghiệm thu'?' Kế toán và CSKH nhận thông báo.':''))}
+
+/* ===== G-08: Kế toán xác nhận thanh toán (US-M3-02, BR-09) ===== */
+let PY=null;
+const PAYS=['Chưa thanh toán','Đã cọc','Đã tất toán'];
+function payOpen(did){
+ const d=deal(did),c=cust(d.cust);
+ if(K()!=='ktoan'){toast('Chỉ Kế toán được xác nhận thanh toán.',true);return}
+ if(d.stage!=='Đã ký'){toast('Deal chưa “Đã ký” nên chưa xác nhận thanh toán được.',true);return}
+ PY={deal:did};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md"><div class="mh"><b>Xác nhận thanh toán</b><button class="x" data-act="closeModal">×</button></div><div class="mb">
+ <div class="fixed" style="margin-bottom:12px"><b>${esc(c.name)}</b><br><small>${esc(d.name)} · ${d.val==null?'chưa có giá trị':vnd(d.val)} · hiện là “${esc(d.pay)}”</small></div>
+ <div class="fld"><label>Trạng thái thanh toán mới <i>*</i></label><select id="pyTo"><option value="">Chọn trạng thái…</option>${PAYS.map(s=>`<option>${s}</option>`).join('')}</select><div class="hint">Hợp đồng yêu cầu thanh toán đủ ngay thì chọn thẳng “Đã tất toán”, không cần qua “Đã cọc”.</div></div>
+ <div class="err" id="pyErr"></div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="paySave">Xác nhận</button></div></div></div>`}
+function paySave(){
+ const d=deal(PY.deal),err=m=>{document.getElementById('pyErr').textContent=m};
+ if(K()!=='ktoan')return err('Chỉ Kế toán được xác nhận thanh toán.');
+ if(d.stage!=='Đã ký')return err('Hợp đồng chưa ký nên chưa xác nhận thanh toán được.');
+ const to=hv('pyTo');if(!to)return err('Chưa chọn trạng thái thanh toán.');
+ const cur=PAYS.indexOf(d.pay),nx=PAYS.indexOf(to);
+ if(nx===cur)return err('Thanh toán đang ở “'+to+'”.');
+ if(nx<cur)return err('Trạng thái thanh toán không lùi được (đang ở “'+d.pay+'”).');
+ d.payHist=d.payHist||[];d.payHist.push({t:S.now,by:R().short,to});d.pay=to;
+ closeModal();render();toast('Đã xác nhận thanh toán “'+esc(to)+'”, ghi người xác nhận và thời điểm. Giai đoạn thương mại vẫn “Đã ký”.')}
+
+/* ===== G-07: Thông tin xuất hóa đơn và chuyển Kế toán (US-M5-08, US-M5-09, BR-05, BR-06) ===== */
+let IV=null;
+const invSent={},invHist=[];
+const IV_L={legal:'Tên pháp lý',tax:'Mã số thuế',addr:'Địa chỉ trụ sở',email:'Email nhận hóa đơn'};
+const canInv=c=>K()==='tp'||(K()==='nv'&&c.owner===S.role);
+const hasSigned=cid=>deals.some(d=>d.cust===cid&&d.stage==='Đã ký');
+function invOpen(cid,check){
+ const c=cust(cid);
+ if(!canInv(c)){toast('Chỉ Nhân viên KD phụ trách khách hoặc Trưởng phòng KD sửa được thông tin xuất hóa đơn.',true);return}
+ IV={cid};const x=INV[cid]||{};
+ document.getElementById('modal').innerHTML=`<div class="ov"><div class="md wide"><div class="mh"><b>Thông tin xuất hóa đơn · ${esc(c.name)}</b><button class="x" data-act="closeModal">×</button></div><div class="mb"><div id="ivSum"></div>
+ ${fld('iv','legal','Tên pháp lý',inp('iv','legal',x.legal,'maxlength="200"'),false)}
+ ${fld('iv','tax','Mã số thuế',inp('iv','tax',x.tax,'maxlength="14"'),false,'10 chữ số, hoặc 13 chữ số dạng 0101234567-001. Chỉ kiểm tra định dạng.')}
+ ${fld('iv','addr','Địa chỉ trụ sở',inp('iv','addr',x.addr,'maxlength="255"'),false)}
+ ${fld('iv','email','Email nhận hóa đơn',inp('iv','email',x.email,'maxlength="100"'),false)}
+ <div class="note">Được lưu từng phần. Đủ bốn trường chỉ bắt buộc khi chuyển Kế toán${invSent[cid]?'; khách này đã chuyển nên bốn trường không được để trống':''}.</div></div>
+ <div class="mf"><button class="btn" data-act="closeModal">Hủy</button><button class="btn pri" data-act="invSave">Lưu</button></div></div></div>`;
+ if(check){const e={};Object.keys(IV_L).forEach(k=>{if(!String(x[k]||'').trim())e[k]='Chưa có '+IV_L[k].toLowerCase()+'.'});showFE('iv',IV_L,e,'Chưa chuyển được.')}}
+function invSave(){
+ const c=cust(IV.cid),old=INV[c.id]||{legal:'',tax:'',addr:'',email:''};
+ if(!canInv(c)){toast('Chỉ Nhân viên KD phụ trách khách hoặc Trưởng phòng KD sửa được thông tin xuất hóa đơn.',true);return}
+ const v={legal:hv('ivin-legal').trim(),tax:taxNorm(hv('ivin-tax')),addr:hv('ivin-addr').trim(),email:hv('ivin-email').trim()},e={};
+ if(v.legal.length>200)e.legal='Tên pháp lý tối đa 200 ký tự.';
+ if(v.addr.length>255)e.addr='Địa chỉ trụ sở tối đa 255 ký tự.';
+ const te=taxErr(v.tax);if(te)e.tax=te;else{const dt=dupTax(v.tax,c.id);if(dt)e.tax='Mã số thuế đã có ở hồ sơ “'+dt.name+'”, người phụ trách '+ownerName(dt)+' (BR-06).'}
+ if(v.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email))e.email='Email không hợp lệ, cần dạng ten@ten-mien.duoi.';
+ if(invSent[c.id])Object.keys(IV_L).forEach(k=>{if(!v[k]&&!e[k])e[k]='Sau khi đã chuyển Kế toán, '+IV_L[k].toLowerCase()+' không được để trống.'});
+ showFE('iv',IV_L,e,'Chưa lưu được.');
+ if(Object.keys(e).length)return;
+ INV[c.id]=v;let extra='';
+ if(invSent[c.id]){const ch=Object.keys(IV_L).filter(k=>(old[k]||'')!==v[k]);
+  if(ch.length){const tx=ch.map(k=>IV_L[k]+': '+(old[k]||'Chưa có')+' → '+v[k]).join('; ');invHist.push({cust:c.id,t:S.now,by:R().short,label:'Sửa thông tin hóa đơn',text:tx});notify('ktoan','Thông tin xuất hóa đơn của '+c.name+' vừa đổi. '+tx+'.',{cust:c.id});extra=' Kế toán nhận thông báo về trường đã đổi.'}}
+ closeModal();render();toast('Đã lưu thông tin xuất hóa đơn.'+extra)}
+function invSend(cid){
+ const c=cust(cid);
+ if(!canInv(c)){toast('Chỉ Nhân viên KD phụ trách khách hoặc Trưởng phòng KD được chuyển Kế toán.',true);return}
+ if(!hasSigned(cid)){toast('Chỉ chuyển Kế toán khi khách có deal “Đã ký”.',true);return}
+ if(invSent[cid]){toast('Thông tin đã chuyển Kế toán lúc '+fmt(invSent[cid].t)+'. Khi sửa, Kế toán tự nhận thông báo.',true);return}
+ const x=INV[cid]||{},miss=Object.keys(IV_L).filter(k=>!String(x[k]||'').trim());
+ if(miss.length){invOpen(cid,true);toast('Chưa chuyển được: còn thiếu '+miss.map(k=>IV_L[k]).join(', ')+'.',true);return}
+ invSent[cid]={by:R().short,t:S.now};invHist.push({cust:cid,t:S.now,by:R().short,label:'Chuyển Kế toán',text:'Thông tin xuất hóa đơn chuyển sang Kế toán: '+x.legal+' · MST '+x.tax});
+ notify('ktoan','Khách '+c.name+' chuyển thông tin xuất hóa đơn: '+x.legal+' · MST '+x.tax+'.',{cust:cid});
+ render();toast('Đã chuyển thông tin xuất hóa đơn sang Kế toán. Kế toán nhận thông báo; sự kiện ghi vào dòng thời gian.')}
+
+/* ===== D-01: mở thông báo, đánh dấu đã đọc, đi tới đúng màn hình (US-M5-07 AC2) ===== */
+function openNotif(i){
+ const n=myNotifs()[i];if(!n)return;
+ const x=n.nid?notifs.find(y=>y.id===n.nid):null;if(x)x.read=true;
+ const l=n.link;
+ if(l){if(l.cust){goCust(l.cust);return}
+  if(l.form){render();openHFView(l.form);return}
+  if(l.page){S.page=l.page;if(l.tab)S.tab=l.tab;if(l.hoTab)S.hoTab=l.hoTab}}
+ render()}
+
+const ACT={
+ page:d=>{S.page=d.p;S.notif=false;render()},
+ bell:()=>{S.notif=!S.notif;render()},
+ openCust:d=>{const c=cust(d.id);if(!canSeeCust(c)){toast({mkt:'Marketing không có quyền xem hồ sơ khách.',kt:'Kỹ thuật chỉ xem được khách đã được gửi form bàn giao.',ktoan:'Kế toán chỉ xem được khách đã ký.'}[K()]||'Bạn chỉ xem được khách mình phụ trách.',true);return}S.drawer=d.id;S.drawerDeal='';S.tlN=20;render()},
+ tlMore:()=>{S.tlN+=20;render()},
+ closeDrawer:()=>{S.drawer=null;render()},
+ done:d=>{const t=tasks.find(x=>x.id===d.id);if(t.owner!==S.role){toast('Chỉ người được giao việc mới hoàn thành được.',true);return}t.status='done';t.doneAt=S.now;render();toast('Đã hoàn thành việc. Việc rời danh sách cần làm.')},
+ doneLog:d=>{const t=tasks.find(x=>x.id===d.id);if(t.owner!==S.role){toast('Chỉ người được giao việc mới hoàn thành được.',true);return}t.status='done';t.doneAt=S.now;render();const c=cust(t.cust);if(!canLog(c)){toast('Việc đã xong, nhưng bạn không có quyền ghi nhanh cho khách này.',true);return}openQL({cust:t.cust,deal:t.deal,task:t.id});QL.locked=true;syncQL()},
+ resched:d=>openResched(d.id),saveResched:()=>saveResched(),
+ newLog:()=>{openQL({})},
+ logCust:d=>{openQL({cust:d.id});QL.locked=true;syncQL()},
+ qlPick:d=>{QL[d.k]=d.v;document.getElementById('qlErr').textContent='';syncQL()},
+ saveQL:()=>saveQL(),closeModal:()=>closeModal(),
+ tab:d=>{S.tab=d.t;render()},
+ selAll:()=>{queue().forEach(l=>S.sel.add(l.id));render()},
+ assign:()=>doAssign(),
+ rAll:()=>{custs.filter(c=>c.owner===S.redist.from).forEach(c=>S.redist.sel.add(c.id));render()},
+ redist:()=>doRedist(),
+ toggleActive:()=>{if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được đánh dấu nghỉ việc.',true);return}const e=EMP[S.redist.from];e.active=!e.active;S.redist.sum=null;render()},
+ startHo:d=>startHandoff(d.deal),viewHo:d=>openHFView(d.id),editHo:d=>openHFEdit(d.id),
+ recvHo:d=>recvHo(d.id),retHo:d=>openRet(d.id),saveRet:()=>saveRet(),submitHF:()=>submitHF(),
+ hoTab:d=>{S.hoTab=d.t;render()},
+ dcTab:d=>{S.dcTab=d.t;render()},dcNew:d=>dcOpen(d.deal),dcSend:()=>dcSend(),dcOk:d=>dcApprove(d.id),dcRejOpen:d=>dcRejOpen(d.id),dcRej:()=>dcRej(),signDeal:d=>signDeal(d.deal),signConfirm:()=>signConfirm(),
+ openNotif:d=>openNotif(Number(d.i)),
+ cfOpen:()=>cfOpen(),cfSave:()=>cfSave(false),cfForce:()=>cfSave(true),cfOpenDup:d=>{closeModal();goCust(d.id)},
+ liOpen:()=>liOpen(),liRun:()=>liRun(),liSample:()=>{document.getElementById('liText').value=LI_SAMPLE;document.getElementById('liRes').innerHTML=''},
+ imOpen:()=>imOpen(),imRun:()=>imRun(),imSample:()=>{document.getElementById('imText').value=IM_SAMPLE;document.getElementById('imRes').innerHTML=''},
+ convLead:d=>convertLead(d.id),lcNew:()=>{const id=LC.id;closeModal();doConvert(id,null)},lcAttach:()=>{const id=LC.id,to=LC.dup;closeModal();doConvert(id,to)},
+ stageOpen:d=>stageOpen(d.deal),stageSave:()=>stageSave(),
+ delOpen:d=>delOpen(d.id),delSave:()=>delSave(),
+ payOpen:d=>payOpen(d.deal),paySave:()=>paySave(),
+ invOpen:d=>invOpen(d.id),invSave:()=>invSave(),invSend:d=>invSend(d.id)
+};
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-act]');if(!el)return;
+ if(S.notif&&el.dataset.act!=='bell'){S.notif=false}
+ ACT[el.dataset.act]&&ACT[el.dataset.act](el.dataset,e)});
+document.addEventListener('change',e=>{
+ const el=e.target.closest('[data-chg]');if(!el)return;const v=el.value,k=el.dataset.chg;
+ if(k==='role'){S.role=v;S.drawer=null;S.notif=false;S.sel.clear();if(K()==='tp'&&S.page==='lead'&&!['queue','assigned','redist'].includes(S.tab))S.tab='queue';if(K()!=='tp'&&S.tab==='redist')S.tab='queue';if(K()==='kt'&&S.page==='today')S.page='ho';if(K()==='ktoan'&&S.page==='today')S.page='cust';render()}
+ else if(k==='per'){S.per=v;render()}
+ else if(k==='kg'){S.kg=Number(v);render()}
+ else if(k==='kc'){S.kc=Number(v);render()}
+ else if(k==='clock'){if(v==='')return;S.now=Number(v);S.sel.clear();render()}
+ else if(k==='clkDay'||k==='clkTime'){const di=Number(document.getElementById('clkDay').value),tv=(document.getElementById('clkTime').value||'00:00').split(':').map(Number);S.now=di*D+tv[0]*60+tv[1];S.sel.clear();render()}
+ else if(k==='liFile'){const fl=el.files[0];if(fl){const rd=new FileReader();rd.onload=()=>{document.getElementById('liText').value=String(rd.result)};rd.readAsText(fl)}}
+ else if(k==='imFile'){const fl=el.files[0];if(fl){const rd=new FileReader();rd.onload=()=>{document.getElementById('imText').value=String(rd.result)};rd.readAsText(fl)}}
+ else if(SG&&k==='sgTo'){document.getElementById('sgLost').style.display=v==='Thua'?'block':'none';document.getElementById('sgErr').textContent=''}
+ else if(DL&&k==='dlTo'){document.getElementById('dlDayW').style.display=v==='Đã nghiệm thu'?'block':'none';document.getElementById('dlErr').textContent=''}
+ else if(k==='drawerDeal'){S.drawerDeal=v;S.tlN=20;render()}
+ else if(k==='selLead'){el.checked?S.sel.add(el.dataset.id):S.sel.delete(el.dataset.id);render()}
+ else if(k==='assignTo'){S.assignTo=v;render()}
+ else if(k==='reassign'){const l=leads.find(x=>x.id===el.dataset.id);if(K()!=='tp'){toast('Chỉ Trưởng phòng KD được đổi người phụ trách.',true);render();return}l.owner=v;notify(v,'Bạn được giao lead '+l.name+'.',{page:'lead'});render();toast('Đã đổi người phụ trách lead sang '+EMP[v].name+'.')}
+ else if(k==='rFrom'){S.redist.from=v;S.redist.sel.clear();S.redist.sum=null;render()}
+ else if(k==='rTo'){S.redist.to=v;render()}
+ else if(k==='rSel'){el.checked?S.redist.sel.add(el.dataset.id):S.redist.sel.delete(el.dataset.id);render()}
+ else if(QL&&k==='qlCust'){QL.cust=v;QL.deal='';if(v){const od=openDeals(v);if(od.length===1)QL.deal=od[0].id}syncQL()}
+ else if(QL&&k==='qlDeal'){QL.deal=v}
+ else if(QL&&k==='qlDay'){QL.day=v;document.getElementById('qlErr').textContent=''}
+ else if(QL&&k==='qlTime'){QL.time=v}
+ else if(RET&&k==='retReason'){document.getElementById('retReq').textContent=v==='Khác'?'(bắt buộc)':'';document.getElementById('retErr').textContent=''}
+});
+document.addEventListener('input',e=>{if(QL&&e.target.id==='qlNote'){QL.note=e.target.value;document.getElementById('qlCnt').textContent=QL.note.length+'/500'}
+ if(HF){const id=e.target.id;if(id==='hfInfra'){const c=document.getElementById('hfCnt');if(c)c.textContent=e.target.value.length+'/255'}
+  const k=ID_FLD[id];if(k){const w=document.getElementById('fld-'+k),m=document.getElementById('err-'+k);if(w)w.classList.remove('bad');if(m)m.textContent=''}}});
+render();
+</script>
+</body>
+</html>
